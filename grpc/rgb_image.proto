@@ -4,22 +4,36 @@
 // The name of the RGB image will also be provided
 
 // Define the version of the protobuf
-syntax = "proto2";
+syntax = "proto3";
 
 // Define the package
 package ai_powered_visual_inspection_for_manifacturing;
 
-// Define the message for the RGB image
+// Input RGB image
 message RGB_image {
-  optional string name = 1;
-  optional int32 width = 2;
-  optional int32 height = 3;
-  optional int32 depth = 4;
-  optional bytes data = 5;
+  // The name of the image
+  string name = 1;
+  // The width of the image
+  int32 width = 2;
+  // The height of the image
+  int32 height = 3;
+  // The RGB image
+  bytes image = 4;
 }
 
-// Define the message for the list of RGB images
-message RGB_images {
-  optional int32 number_of_images = 1;
-  repeated RGB_image images = 2;
+// Output Predicted label
+message Predicted_label {
+  // The name of the image
+  string name = 1;
+  // The predicted label
+  string label = 2;
 }
+
+
+// Service to predict the label of an image
+service Predict_label {
+  // Input RGB image
+  rpc Predict (RGB_image) returns (Predicted_label);
+}
+
+// Generate code grpc tools : python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. rgb_image.proto
