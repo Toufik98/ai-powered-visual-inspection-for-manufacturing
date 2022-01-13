@@ -16,34 +16,71 @@ import numpy as np
 import cv2
 
 
-# create a channel
-channel = grpc.insecure_channel('localhost:50051')
+# Define the client class
+class RgbImageClient(object):
+    """
+    This class is used to implement a gRPC client that sends rgb images to the server.
+    """
+    def __init__(self, ip_address, port):
+        """
+        Initialize the client class
+        """
+        # create a channel to the server
+        channel = grpc.insecure_channel(ip_address + ":" + port)
 
-# create a stub (client)
-stub = rgb_image_pb2_grpc.Predict_labelStub(channel)
+        # create a stub (client)
+        self.stub = rgb_image_pb2_grpc.Predict_labelStub(channel)
 
-# create a valid rgb image
-rgb_image = rgb_image_pb2.RGB_image()
+    def send_image(self, image, nm, h, w):
+        """
+        Send an image to the server
+        """
+        # encode the image
+        image_bytes = image.tobytes()
+        image_bytes_compressed = zlib.compress(image_bytes)
+        image_bytes_encoded = base64.b64encode(image_bytes_compressed)
 
-# Reade the image from the file
-image = cv2.imread("../data/AE00008_143414_00_1_1_2001.jpg")
+        # create a request object
+        request = rgb_image_pb2.RGB_image(image = image_bytes_encoded, name = nm, height =h , width = w) 
 
-# Encode the image
-image_bytes = image.tobytes()
+        # make the call
+        response = self.stub.Predict(request)
 
-# Compress the image
-image_bytes_compressed = zlib.compress(image_bytes)
+        # decode the response
+        label = response.label
+        name = response.name
 
-# Encode the image
-image_bytes_encoded = base64.b64encode(image_bytes_compressed)
+        print("The label is: " + label)
+        print("The name is: " + name)
+    
+    def stop(self):
+        """
+        Stop the client
+        """
+        self.stub.stop()
+        print("Client stopped...")
+    
 
-# Set the image
-rgb_image.image = image_bytes_encoded
 
-# Send the image to the server
-response = stub.Predict(rgb_image)
+def main():
+    # create a client
+    client = RgbImageClient("localhost", "50051")
 
-# decode the response
-print("Received response:")
-print(response)
+    # create an image
+    image = cv2.imread("../data/AE00008_143414_00_1_1_2001.jpg")
 
+    # Get the image height and width
+    h, w, _ = image.shape
+    print("Image height:", h)
+    print("Image width:", w)
+    name = "image1"
+    client.send_image(image, name, h, w)
+
+    # stop the client
+    client.stop()
+
+if __name__ == "__main__":
+    main()
+
+    
+    
