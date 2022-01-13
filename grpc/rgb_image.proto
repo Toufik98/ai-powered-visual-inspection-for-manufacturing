@@ -1,0 +1,25 @@
+// This program aims to describe with protobuf the data structure of the project 
+// "ai-powered-visual-inspection-for-manifacturing"
+// The data that will be used is mainly an RGB image or a list of RGB images
+// The name of the RGB image will also be provided
+
+// Define the version of the protobuf
+syntax = "proto2";
+
+// Define the package
+package ai_powered_visual_inspection_for_manifacturing;
+
+// Define the message for the RGB image
+message RGB_image {
+  optional string name = 1;
+  optional int32 width = 2;
+  optional int32 height = 3;
+  optional int32 depth = 4;
+  optional bytes data = 5;
+}
+
+// Define the message for the list of RGB images
+message RGB_images {
+  optional int32 number_of_images = 1;
+  repeated RGB_image images = 2;
+}
