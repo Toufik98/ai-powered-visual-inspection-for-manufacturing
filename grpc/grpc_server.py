@@ -62,16 +62,24 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_labelServicer):
     
     def Predict(self, request, context):
         """
-        Input RGB image
+        Method where will be doing our processing and storing the result in Database
+
+        TODO: Add your processing here
+        TODO: Add your storing here
+
         """
         print("Received image:")
-        print(request)
+        print("Name: " + request.name)
+        print("Height: " + str(request.height))
+        print("Width: " + str(request.width))
 
         # decode the image and display it
         image = np.frombuffer(zlib.decompress(base64.b64decode(request.image)), dtype=np.uint8).reshape(request.height, request.width, 3)
+
+        # TODO: Delete display of the image 
         # display the image
-        cv2.imshow("Image", image)
-        cv2.waitKey(0)
+        #cv2.imshow("Image", image)
+        #cv2.waitKey(0)
 
         # create a valid response
         response = rgb_image_pb2.Predicted_label()
@@ -79,7 +87,7 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_labelServicer):
         response.name = "image1"
 
         # Send the response
-        
+
         return response
 
 def main():
