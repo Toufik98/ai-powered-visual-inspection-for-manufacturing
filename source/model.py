@@ -155,14 +155,14 @@ def get_data(data_dir, batch_size):
     # Train datagen
     train_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
     # Load the training, validation, and testing data
-    train_generator = train_datagen.flow_from_directory(cwd+data_dir + '/x_train', target_size=(1000, 1000), batch_size=batch_size, class_mode='binary', subset='training')
+    train_generator = train_datagen.flow_from_directory(cwd+data_dir + '/x_train', target_size=(200, 200), batch_size=batch_size, class_mode='binary', subset='training')
     validation_generator = train_datagen.flow_from_directory(cwd+data_dir + '/x_train',
-                                                                                    target_size=(1000, 1000),
+                                                                                    target_size=(200, 200),
                                                                                     batch_size=batch_size,
                                                                                     class_mode='binary',
                                                                                     subset='validation')
 
-    test_generator = ImageDataGenerator(rescale=1./255).flow_from_dataframe(dataframe=test_df, directory=data_dir + '/x_test', x_col='images', y_col='labels', target_size=(1000, 1000), batch_size=batch_size, class_mode='binary')
+    test_generator = ImageDataGenerator(rescale=1./255).flow_from_dataframe(dataframe=test_df, directory=data_dir + '/x_test', x_col='images', y_col='labels', target_size=(200, 200), batch_size=batch_size, class_mode='binary')
 
     return train_generator, validation_generator, test_generator
 
@@ -171,7 +171,7 @@ def main():
     #parse the command line arguments
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--data_dir', type=str,default="/../data",help='path to the data directory')
-    argparser.add_argument('--batch_size', type=int, default= 64,help='batch size')
+    argparser.add_argument('--batch_size', type=int, default= 2,help='batch size')
     argparser.add_argument('--epochs', type=int,default=50, help='number of epochs')
     argparser.add_argument('--learning_rate', type=float, help='learning rate')
     argparser.add_argument('--dropout', type=float, help='dropout rate')
@@ -180,7 +180,7 @@ def main():
     #get the data
     train_generator, validation_generator, test_generator = get_data(args.data_dir, args.batch_size)
 
-    input_shape = (1000, 1000, 3)
+    input_shape = (200, 200, 3)
     num_classes = train_generator.num_classes
     model = CNN_model(input_shape, num_classes)
     model.summary()
