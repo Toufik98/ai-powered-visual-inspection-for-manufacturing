@@ -11,4 +11,8 @@ __pycache__
 # Ignore pycache files
 *.pyc
 
+# Ignore data folder
+data
+
+
 

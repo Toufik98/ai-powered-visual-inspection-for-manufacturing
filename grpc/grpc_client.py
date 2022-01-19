@@ -15,8 +15,11 @@ import zlib
 import numpy as np
 import cv2
 import argparse
+
+from tkinter.filedialog import askopenfilename, asksaveasfilename#pour le coter graphique
 from tkinter import *
-from tkinter import filedialog
+from tkinter import Button, Tk
+from tkinter import messagebox
 
 import os
 import sys
@@ -53,24 +56,35 @@ class RgbImageClient(object):
         """
         Send an image to the server
         """
-        # encode the image
-        image_bytes = image.tobytes()
-        image_bytes_compressed = zlib.compress(image_bytes)
-        image_bytes_encoded = base64.b64encode(image_bytes_compressed)
+        try :
+            # encode the image
+            if image is not None:
+                image_bytes = image.tobytes()
+                image_bytes_compressed = zlib.compress(image_bytes)
+                image_bytes_encoded = base64.b64encode(image_bytes_compressed)
+    
+                # create a request object
+                request = rgb_image_pb2.RGB_image(image = image_bytes_encoded, name = nm, height =h , width = w) 
+                
+                # make the call
+                print("Sending image to server...") 
+                response = self.stub.Predict(request)
+                if response.label != "":
+                    self.label = response.label
+                    self.name = response.name
+                    messagebox.showinfo("Image sent", "Image sent to server")
+                    messagebox.showinfo("Image Label", "Image label: " + self.label)
+                    
 
-        # create a request object
-        request = rgb_image_pb2.RGB_image(image = image_bytes_encoded, name = nm, height =h , width = w) 
-
-        # make the call
-        print("Sending image to server...") 
-        response = self.stub.Predict(request)
-        print("Image sent to server...")
-        # decode the response
-        self.label = response.label
-        self.name = response.name
-
-        print("Received label: " + self.label)
-        print("Received name: " + self.name)
+                else:
+                    messagebox.showinfo("Image Classification", "No classification found")
+            else:
+                messagebox.showinfo("Image Sending", "No image selected, please select an image")
+        except Exception as e:
+            messagebox.showinfo("Error", "Error: " + str(e))
+       
+        
+            
     
     def select_image(self):
         """
@@ -79,15 +93,29 @@ class RgbImageClient(object):
         # Open file dialog
         self.root.filename =  filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
 
-        # Read the image
-        self.image = cv2.imread(self.root.filename)
+        try:
+            if self.root.filename != "":
+                messagebox.showinfo("Image Selection", "Image selected: " + self.root.filename.split("/")[-1])
+            else:
+                messagebox.showinfo("Image Selection", "No image selected")
+            # Read the image
+            self.image = cv2.imread(self.root.filename)
 
-        # Get the image name
-        self.nm = self.root.filename.split("/")[-1]
+            # Get the image name
+            self.nm = self.root.filename.split("/")[-1]
 
-        # Get the image height and width
-        self.h = self.image.shape[0]
-        self.w = self.image.shape[1]
+            # Get the image height and width
+            self.h = self.image.shape[0]
+            self.w = self.image.shape[1]
+
+        except Exception as e:
+            messagebox.showinfo("Error", "Error: " + str(e))
+
+
+
+# -- -----------------------------------------------------
+# Functions for the GUI
+# -- -----------------------------------------------------
 
 
 def main():
@@ -104,48 +132,46 @@ def main():
     # Create a client
     client = RgbImageClient(ip_address, port)
 
-   
+    # Get current working directory
+    cwd = os.getcwd()
 
-    """
-    Using Pyqt5 to create a GUI
-    Create a root window, place a button to select the image and place with logo to verify the well-working of the upload
-    Place anothe button to send the image to the server and place with logo to verify the well-working of sending the image
-    Place a label  to receive the response from the server and place with logo to verify the well-working of receiving the response
-    Place a label to show the image to send to the server
-    Place a status bar to show the sennding image
+    # Set size of the window
+    window_width = 300
+    window_height = 600
 
-    Place a button with a power button to close the program
-    """
+
+
     # Create a root window
     client.root = Tk()
-    client.root.title("Rgb Image Client")
+    client.root.title("Image Selection")
+    client.root.geometry("{}x{}".format(window_width, window_height))
 
-    # Create a label to show the response from the server
-    response_label = Label(client.root, text = "Response from the server: ")
-    response_label.grid(row = 1, column = 0)
+    # Create a Canvas widget
+    canvas = Canvas(client.root, width = window_width, height = window_height)
+    canvas.pack()
 
-    # Create a label to show the sending image
-    sending_label = Label(client.root, text = "Sending image: ")
-    sending_label.grid(row = 2, column = 0)
+    # Image background
+    image_background = PhotoImage(file = cwd + "/images/background.png")
 
-    # Create a label to show the status of the sending image
-    status_label = Label(client.root, text = "Label of the image: " + client.label)
-    status_label.grid(row = 3, column = 0)
+    # Add the background image
+    canvas.create_image(0, 0, image = image_background, anchor = NW)
 
-    # Create a button to select the image
-    select_button = Button(client.root, text = "Select image", command = client.select_image)
-    select_button.grid(row = 1, column = 1)
+    # Add the image selection button
+    image_selection_button = Button(client.root, text = "Select image", command = client.select_image)
+    image_selection_button.place(x = window_width/2 - 50, y = window_height/2 - 50)
 
-    # Create a button to send the image to the server
-    send_button = Button(client.root, text = "Send image", command = lambda: client.send_image(client.image, client.nm, client.h, client.w))
-    send_button.grid(row = 2, column = 1)
+    # Uploid the send logo
+    #image_uploid_logo = PhotoImage(file = cwd + "/images/upload.png")
+    #image_selection_button.config(image = image_uploid_logo, compound = RIGHT)
 
-    # Create a button to close the program
-    close_button = Button(client.root, text = "Close", command = client.root.destroy)
-    close_button.grid(row = 4, column = 1)
 
-    # Start the main loop
+    # Add the image sending button
+    image_sending_button = Button(client.root, text = "Send image", command = lambda: client.send_image(client.image, client.nm, client.h, client.w))
+    image_sending_button.place(x = window_width/2 - 50, y = window_height/2 + 50)
+
+    # Loop for the GUI
     client.root.mainloop()
+
 
 
 
