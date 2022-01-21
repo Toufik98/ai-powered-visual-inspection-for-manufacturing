@@ -17,23 +17,33 @@ message RGB_image {
   int32 width = 2;
   // The height of the image
   int32 height = 3;
+  // The depth of the image
+  int32 depth = 4;
   // The RGB image
-  bytes image = 4;
+  bytes image = 5;
 }
 
-// Output Predicted label
-message Predicted_label {
-  // The name of the image
-  string name = 1;
+// Output Predicted
+message Predicted {
   // The predicted label
-  string label = 2;
+  string label = 1;
+  // Bounding box cordinates
+  int32 x = 2;
+  int32 y = 3;
+  int32 width = 4;
+  int32 height = 5;
+  // Shape of the image
+  int32 height_image = 6;
+  int32 width_image = 7;
+  int32 depth_image = 8;
+  // Confidence of the prediction
+  float confidence = 9;
 }
-
 
 // Service to predict the label of an image
-service Predict_label {
-  // Input RGB image
-  rpc Predict (RGB_image) returns (Predicted_label);
+service Predict_service {
+  // Predict the label of an image
+  rpc Predict (RGB_image) returns (Predicted);
 }
 
 // Generate code grpc tools : python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. rgb_image.proto
