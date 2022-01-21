@@ -16,7 +16,7 @@ import base64
 import numpy as np
 import cv2
 
-class RgbImageServicer(rgb_image_pb2_grpc.Predict_labelServicer):
+class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
     """
     This class is used to implement a gRPC server that receives rgb images from the client.
     """
@@ -35,7 +35,7 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_labelServicer):
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
         # add the service to the server
-        rgb_image_pb2_grpc.add_Predict_labelServicer_to_server(self, self.server)
+        rgb_image_pb2_grpc.add_Predict_serviceServicer_to_server(self, self.server)
 
         # start the server
         self.server.add_insecure_port(ip_address + ":" + port)
@@ -82,9 +82,17 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_labelServicer):
         #cv2.waitKey(0)
 
         # create a valid response
-        response = rgb_image_pb2.Predicted_label()
+        response = rgb_image_pb2.Predicted()
         response.label = "false"
-        response.name = "image1"
+        response.confidence = 0.0
+        response.x = 0
+        response.y = 0
+        response.height_image = 0
+        response.width_image = 0
+        response.depth_image = 0
+        response.width = 0
+        response.height = 0
+        response.confidence = 0.0
 
         # Send the response
 

@@ -16,10 +16,11 @@ import numpy as np
 import cv2
 import argparse
 
-from tkinter.filedialog import askopenfilename, asksaveasfilename#pour le coter graphique
+from tkinter import filedialog
 from tkinter import *
 from tkinter import Button, Tk
 from tkinter import messagebox
+
 
 import os
 import sys
@@ -39,18 +40,28 @@ class RgbImageClient(object):
         channel = grpc.insecure_channel(ip_address + ":" + port)
 
         # create a stub (client)
-        self.stub = rgb_image_pb2_grpc.Predict_labelStub(channel)
+        self.stub = rgb_image_pb2_grpc.Predict_serviceStub(channel)
 
         # Create a root window
         self.root = None
 
+        # Data to sent to the server
         self.image = None
         self.nm = None
         self.h = None
         self.w = None
+        self.depth = None
 
+        # Data to receive from the server
         self.label = ""
-        self.name = ""
+        self.x = 0
+        self.y = 0
+        self.width = 0
+        self.height = 0
+        self.height_image = 0
+        self.width_image = 0
+        self.depth_image = 0
+        self.confidence = 0
 
     def send_image(self, image, nm, h, w):
         """
@@ -64,17 +75,25 @@ class RgbImageClient(object):
                 image_bytes_encoded = base64.b64encode(image_bytes_compressed)
     
                 # create a request object
-                request = rgb_image_pb2.RGB_image(image = image_bytes_encoded, name = nm, height =h , width = w) 
+                request = rgb_image_pb2.RGB_image(image = image_bytes_encoded, name = nm, height =h , width = w, depth = 3)
                 
                 # make the call
                 print("Sending image to server...") 
                 response = self.stub.Predict(request)
                 if response.label != "":
                     self.label = response.label
-                    self.name = response.name
+                    self.x = response.x
+                    self.y = response.y
+                    self.width = response.width
+                    self.height = response.height
+                    self.height_image = response.height_image
+                    self.width_image = response.width_image
+                    self.depth_image = response.depth_image
+                    self.confidence = response.confidence
+                    print("Received response from server:")
                     messagebox.showinfo("Image sent", "Image sent to server")
-                    messagebox.showinfo("Image Label", "Image label: " + self.label)
-                    
+                    messagebox.showinfo("Received data", f"Confidence: {self.confidence}, Label: {self.label}, x: {self.x}, y: {self.y}, width: {self.width}, height: {self.height}, height_image: {self.height_image}, width_image: {self.width_image}, depth_image: {self.depth_image}")
+
 
                 else:
                     messagebox.showinfo("Image Classification", "No classification found")
@@ -91,7 +110,7 @@ class RgbImageClient(object):
         Select an image from the client
         """
         # Open file dialog
-        self.root.filename =  filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+        self.root.filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
 
         try:
             if self.root.filename != "":
@@ -111,11 +130,6 @@ class RgbImageClient(object):
         except Exception as e:
             messagebox.showinfo("Error", "Error: " + str(e))
 
-
-
-# -- -----------------------------------------------------
-# Functions for the GUI
-# -- -----------------------------------------------------
 
 
 def main():
@@ -171,8 +185,6 @@ def main():
 
     # Loop for the GUI
     client.root.mainloop()
-
-
 
 
 if __name__ == "__main__":
