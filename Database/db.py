@@ -46,8 +46,6 @@ def save_report():
     fp.close()
 
 if __name__ == '__main__':
-
-
     insert_card("test_card_1",4,"Defected","2022-01-21")
     r = generate_report()
     print(r)
