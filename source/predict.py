@@ -74,8 +74,8 @@ class Predict:
         :return:
         """
         classes = {
-            0: "Not Defected",
-            1: "Defected"
+            0: "Defected",
+            1: "Not Defected"
         }
         return classes[np.argmax(self.prediction)]
 
