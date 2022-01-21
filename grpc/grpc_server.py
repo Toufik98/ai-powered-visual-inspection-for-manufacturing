@@ -3,6 +3,8 @@ This program is a gRPC server that receives rgb images from the client.
 """
 
 # import the grpc package
+import os
+import sys
 import grpc
 from concurrent import futures
 
@@ -14,7 +16,12 @@ import time
 import zlib 
 import base64
 import numpy as np
-import cv2
+
+# Change the path to the directory where the script predicts.py is located
+cwd = os.getcwd()
+sys.path.append(cwd + '/../source/')
+from predict import Predict
+
 
 class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
     """
@@ -26,6 +33,14 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         Initialize the server class
         """
         self.server = None
+        # Instance of the model
+        self.Predict = Predict(cwd + '/../models/mobilenet.hdf5')
+        if self.Predict.model is None:
+            print("Error loading model")
+        else:
+            print("Model loaded")
+            print("Model: ", self.Predict.model)
+
     
     def start(self, ip_address, port):
         """
@@ -43,6 +58,7 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         # start the server
         self.server.start()
         print("Server started...")
+
     def stop(self):
         """
         Stop the server
@@ -76,15 +92,13 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         # decode the image and display it
         image = np.frombuffer(zlib.decompress(base64.b64decode(request.image)), dtype=np.uint8).reshape(request.height, request.width, 3)
 
-        # TODO: Delete display of the image 
-        # display the image
-        #cv2.imshow("Image", image)
-        #cv2.waitKey(0)
+        # predict the image
+
 
         # create a valid response
         response = rgb_image_pb2.Predicted()
-        response.label = "false"
-        response.confidence = 0.0
+        response.label = self.Predict.get_class()
+        response.confidence = self.Predict.get_confidence()
         response.x = 0
         response.y = 0
         response.height_image = 0
@@ -92,7 +106,6 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         response.depth_image = 0
         response.width = 0
         response.height = 0
-        response.confidence = 0.0
 
         # Send the response
 
