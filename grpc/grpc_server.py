@@ -34,12 +34,12 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         """
         self.server = None
         # Instance of the model
-        self.Predict = Predict(cwd + '/../models/mobilenet.hdf5')
-        if self.Predict.model is None:
+        self.classifier = Predict(cwd + '/../models/mobilenet.hdf5')
+        if self.classifier.model is None:
             print("Error loading model")
         else:
             print("Model loaded")
-            print("Model: ", self.Predict.model)
+            print("Model: ", self.classifier.model)
 
     
     def start(self, ip_address, port):
@@ -93,12 +93,14 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         image = np.frombuffer(zlib.decompress(base64.b64decode(request.image)), dtype=np.uint8).reshape(request.height, request.width, 3)
 
         # predict the image
-
+        image = self.classifier.get_image(image)
+        # Predict the image
+        self.classifier.predict(model=self.classifier.model, image=image)
 
         # create a valid response
         response = rgb_image_pb2.Predicted()
-        response.label = self.Predict.get_class()
-        response.confidence = self.Predict.get_confidence()
+        response.label = self.classifier.get_class()
+        response.confidence = self.classifier.get_confidence()
         response.x = 0
         response.y = 0
         response.height_image = 0
