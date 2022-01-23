@@ -7,7 +7,7 @@ import sys
 import argparse
 import numpy as np
 import tensorflow as tf
-from PIL import Image
+import cv2
 
 
 class Predict:
@@ -43,18 +43,18 @@ class Predict:
         :param image: The image.
         :return: The class of the image.
         """
-        image = image.resize((224, 224))
-        image = np.array(image)
-        image = image / 255.0
-        image = image.reshape(1, 224, 224, 3)
         self.prediction = model.predict(image)
 
-    def get_image(self, image_path):
+    def get_image(self, image):
         """
         :param image_path:
         :return:
         """
-        image = Image.open(image_path)
+        image = cv2.resize(image, (224, 224))
+        image = np.array(image)
+        image = image.astype('float32')
+        image /= 255
+        image = np.expand_dims(image, axis=0)
         return image
 
     def image_size(self, image):
@@ -85,3 +85,30 @@ class Predict:
         :return:
         """
         return self.prediction[0][np.argmax(self.prediction)]
+
+
+def main():
+    # Get current working directory
+    cwd = os.getcwd()
+    # Instantiate the Predict class.
+    predict = Predict(model_path=cwd+"/../models/mobilenet.hdf5")
+    # Load the image.
+    image = cv2.imread(cwd+"/../data/x_test/AE00008_080949_00_2_2_2001.jpg")
+    # Get the image.
+    image = predict.get_image(image)
+
+    # Predict the class of the image.
+    predict.predict(model=predict.model, image=image)
+    # Get the class of the image.
+    class_ = predict.get_class()
+    # Get the confidence of the image.
+    confidence = predict.get_confidence()
+
+    # Print the class and confidence.
+    print("Class: {}".format(class_))
+    print("Confidence: {}".format(confidence))
+
+if __name__ == "__main__":
+    main()
+
+
