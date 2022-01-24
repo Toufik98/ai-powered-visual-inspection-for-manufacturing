@@ -49,6 +49,7 @@ Item {
             var index = path.lastIndexOf("/") + 1;
             var filename = path.substr(index);
             idMyText.text = filename
+            QmlConnector.load_image(path)
 
         }
         onRejected: { console.log("Rejected") }
