@@ -97,17 +97,23 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         # Predict the image
         self.classifier.predict(model=self.classifier.model, image=image)
 
+        # Get class acctivation map
+        self.classifier.get_class_activation_map(image)
+
+        # Get bounding box
+        (x, y, w, h) = self.classifier.get_bounding_box(image)
+
         # create a valid response
         response = rgb_image_pb2.Predicted()
         response.label = self.classifier.get_class()
         response.confidence = self.classifier.get_confidence()
-        response.x = 0
-        response.y = 0
-        response.height_image = 0
-        response.width_image = 0
-        response.depth_image = 0
-        response.width = 0
-        response.height = 0
+        response.x = x
+        response.y = y
+        response.height_image = 224
+        response.width_image = 224
+        response.depth_image = 3
+        response.width = w
+        response.height = h
 
         # Send the response
 
