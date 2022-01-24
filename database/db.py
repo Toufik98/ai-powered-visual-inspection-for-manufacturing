@@ -1,3 +1,4 @@
+from fileinput import filename
 import sqlite3
 from sqlite3 import Error
 import csv
@@ -14,44 +15,64 @@ def create_connection(db_file):
     except Error as e:
         print(e)
 
-def insert_card(Name,DIE,classification_result,Confidence,Bounding_box,Date):
+def insert_card(Name,DIE,classification_result,Confidence,Bounding_box):
+    todays_date = datetime.today().strftime('%Y-%m-%d')
     path = os.getcwd()
     path = path.replace(os.sep, '/')
     path = path + '/test.db'
     con = create_connection(path)
     cur = con.cursor()
-    cur.execute("create table if not exists Carte (Name,DIE,Decision,Confidence,Bounding_box,Date)")
-    cur.execute("insert into Carte values (?,?,?,?,?,?)", (Name,DIE,classification_result,Confidence,Bounding_box,Date))
+    cur.execute("create table if not exists Carte (Name,DIE,classification_result,Confidence,Bounding_box,Date)")
+    cur.execute("insert into Carte values (?,?,?,?,?,?)", (Name,DIE,classification_result,Confidence,Bounding_box,todays_date))
     con.commit()
     con.close()
 
-def generate_report():
+def generate_report(case=0, DIE=1, decision = "Defected", date = "2022"):
+    # 0: generique  1: Par DIE  2: Par Class  3: Par Date
     path = os.getcwd()
     path = path.replace(os.sep, '/')
     path = path + '/test.db'
     con = create_connection(path)
     cur = con.cursor()
-    cur.execute("select * from carte")
+    if case == 0 :
+        cur.execute("select * from carte order by Date DESC")
+    elif case == 1 :
+        cur.execute(f"select * from carte where DIE = {DIE} order by Date DESC")
+    elif case == 2 :
+        cur.execute(f"select * from carte where classification_result LIKE '{decision}' order by Date DESC")
+    elif case == 3 :
+        cur.execute(f"select * from carte where Date LIKE '{date}%' order by Date DESC")
     results = cur.fetchall()
     con.close()
     return results
 
-def save_report():
+
+def save_report(case=0, DIE=1, decision = "Defected", date = "2022"):
+    # 0: generique  1: Par DIE  2: Par Class  3: Par Date
     path = os.getcwd()
     path = path.replace(os.sep, '/')
     path = path + '/test.db'    
-    res = generate_report()
-    fp = open("report.csv", "w", newline='')
+    res = generate_report(case, DIE, decision, date)
+
+    filename = "report"+"_"+datetime.today().strftime('%Y-%m-%d-%Hh%Mm%S')+".csv"
+    fp = open(filename, "w", newline='')
     myFile = csv.writer(fp, delimiter = ',')
-    myFile.writerow(['Card_Name','DIE','Decision','Confidence','Bounding_box','Date'])
+    myFile.writerow(['Card_Name','DIE','classification_result','Confidence','Bounding_box','Date'])
     myFile.writerows(res)
     fp.close()
 
 if __name__ == '__main__':
-    todays_date = datetime.today().strftime('%Y-%m-%d')
-    insert_card("test_card_1",4,"Defected",99,"0,100,21,57",todays_date)
-    insert_card("test_card_2",3,"NOT Defected",97,"0,0,0,0",todays_date)
-    r = generate_report()
-    print(r)
-    save_report()
 
+    # insert_card("test_card_1",4,"Defected",99,"0,100,21,57")
+    # insert_card("test_card_2",3,"NOT Defected",97,"0,0,0,0")
+    # insert_card("test_card_4",4,"NOT Defected",97,"0,0,0,0")
+    # insert_card("test_card_5",4,"NOT Defected",97,"0,0,0,0")
+    # insert_card("test_card_69",1,"Defected",97,"0,0,0,0")
+
+    # r = generate_report_date("2022-02-01")
+    # print(r)
+    # insert_card("test_card_7",4,"Defected",90,"0,0,0,10")
+    # save_report(2,0)
+    # r = generate_report()
+    # print(r)
+    save_report(1)
