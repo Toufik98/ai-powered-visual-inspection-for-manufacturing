@@ -20,7 +20,7 @@ def insert_card(Name,DIE,classification_result,Confidence,Bounding_box,Date):
     path = path + '/test.db'
     con = create_connection(path)
     cur = con.cursor()
-    cur.execute("create table if not exists Carte (Name,DIE,classification_result,Confidence,Bounding_box,Date)")
+    cur.execute("create table if not exists Carte (Name,DIE,Decision,Confidence,Bounding_box,Date)")
     cur.execute("insert into Carte values (?,?,?,?,?,?)", (Name,DIE,classification_result,Confidence,Bounding_box,Date))
     con.commit()
     con.close()
@@ -43,7 +43,7 @@ def save_report():
     res = generate_report()
     fp = open("report.csv", "w", newline='')
     myFile = csv.writer(fp, delimiter = ',')
-    myFile.writerow(['Card_Name','DIE','classification_result','Confidence','Bounding_box','Date'])
+    myFile.writerow(['Card_Name','DIE','Decision','Confidence','Bounding_box','Date'])
     myFile.writerows(res)
     fp.close()
 
