@@ -4,7 +4,7 @@ import QtQuick.Controls 2.0
 
 Window {
     id: idRoot
-    width: 1800
+    width: 1200
     height: 720
     visible: true
 
@@ -12,6 +12,9 @@ Window {
 //        anchors.fill: parent
 //        color: "lightblue"
 //    }
+    Background {
+
+    }
 
    MenuCustom {
 

@@ -1,8 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Window 2.2
 //import QtQuick.Controls 2.0
-import QtQuick.Controls 2.0
-import QtQuick.Dialogs 1.3
+import QtQuick.Controls 2.3
+import QtQuick.Dialogs 1.2
 
 
 ////
@@ -20,211 +20,217 @@ Item {
     id: idRoot
     width: 1200
     height: 720
+    SystemPalette { id: palette }
+
+    // true: load the image, false: Unload it
+    property bool bLoad: false
 
 
-    //     Button {
-    //         id: idUpload
-    //         x: 200
-    //         y: idRoot.height/2
-    //         width: 200
-    //         height: 200
-    //         background: Rectangle {
-    //                color: "grey"
-    //                border.width: 1
-    //                border.color: "Black"
-    //                radius: 20
-    //            }
-    //        text: "Load Image"
-    //        onClicked: {
-    //            console.log("Load the image")
-    //            // we call the function responsible for loading from pc
-    //            // the function must handle the "return message"
-    //        }
-    //     }
 
-    //     Button {
-    //         id: fileButton
-    //         text: "Menu"
-    //         onClicked: menu.open()
+    //    Item {
+    //        width: 580
+    //        height: 400
+    //        SystemPalette { id: palette }
+    //        clip: true
 
-    //         Menu {
-    //             id: menu
-    //             y: fileButton.height
+    FileDialog {
+        id: idfileDialog
+        title: "Choose File"
+        //            selectExisting: fileDialogSelectExisting.checked
+        //            selectMultiple: fileDialogSelectMultiple.checked
+        //            selectFolder: fileDialogSelectFolder.checked
+        folder: shortcuts.pictures
+        nameFilters: [ "Image files (*.png *.jpg)"]
+        selectedNameFilter: "All files (*)"
+        onAccepted: {
+            var path = idfileDialog.fileUrl.toString();
+            console.log(path)
+            idMyImage.source = Qt.resolvedUrl(path)
+            var index = path.lastIndexOf("/") + 1;
+            var filename = path.substr(index);
+            idMyText.text = filename
 
-    //             MenuItem {
-    //                 text: "Settings"
-    //             }
-    //             MenuItem {
-    //                 text: "Reports"
-    //             }
-    //             MenuItem {
-    //                 text: "Save"
-    //             }
-    //         }
-    //     }
-
-    //     FileDialog {
-    //         id: fileDialog
-    //         title: "Please choose a file"
-    //         folder: shortcuts.home
-    //         onAccepted: {
-    //             console.log("You chose: " + fileDialog.fileUrls)
-    //             Qt.quit()
-    //         }
-    //         onRejected: {
-    //             console.log("Canceled")
-    //             Qt.quit()
-    //         }
-    //         Component.onCompleted: visible = true
-    //     }
-
-    Item {
-        width: 580
-        height: 400
-        SystemPalette { id: palette }
-        clip: true
-
-        FileDialog {
-            id: idfileDialog
-//            visible: fileDialogVisible.checked
-//            modality: fileDialogModal.checked ? Qt.WindowModal : Qt.NonModal
-            title: "Choose File"
-//            title: fileDialogSelectFolder.checked ? "Choose a folder" :
-//                                                    (fileDialogSelectMultiple.checked ? "Choose some files" : "Choose a file")
-//            selectExisting: fileDialogSelectExisting.checked
-//            selectMultiple: fileDialogSelectMultiple.checked
-//            selectFolder: fileDialogSelectFolder.checked
-            nameFilters: [ "Image files (*.png *.jpg)", "All files (*)" ]
-            selectedNameFilter: "All files (*)"
-//            sidebarVisible: fileDialogSidebarVisible.checked
-            onAccepted: {
-//                console.log("Accepted: " + fileUrls)
-//                if (fileDialogOpenFiles.checked)
-//                    for (var i = 0; i < fileUrls.length; ++i)
-//                        Qt.openUrlExternally(fileUrls[i])
-
-                var path = idfileDialog.fileUrl.toString();
-                // remove prefixed "file:///"
-//                path = path.replace(/^(file:\/{3})/,"");
-                // unescape html codes like '%23' for '#'
-//                cleanPath = decodeURIComponent(path);
-                console.log(path)
-            }
-            onRejected: { console.log("Rejected") }
         }
+        onRejected: { console.log("Rejected") }
+    }
 
-        //         ScrollView {
-        //             id: scrollView
-        //             anchors {
-        //                 left: parent.left
-        //                 right: parent.right
-        //                 top: parent.top
-        //                 bottom: bottomBar.top
-        //                 leftMargin: 12
-        //             }
-        //             ColumnLayout {
-        //                 spacing: 8
-        //                 Item { Layout.preferredHeight: 4 } // padding
-        //                 Label {
-        //                     font.bold: true
-        //                     text: "File dialog properties:"
-        //                 }
-        //                 CheckBox {
-        //                     id: fileDialogModal
-        //                     text: "Modal"
-        //                     checked: true
-        //                     Binding on checked { value: fileDialog.modality != Qt.NonModal }
-        //                 }
-        //                 CheckBox {
-        //                     id: fileDialogSelectFolder
-        //                     text: "Select Folder"
-        //                     Binding on checked { value: fileDialog.selectFolder }
-        //                 }
-        //                 CheckBox {
-        //                     id: fileDialogSelectExisting
-        //                     text: "Select Existing Files"
-        //                     checked: true
-        //                     Binding on checked { value: fileDialog.selectExisting }
-        //                 }
-        //                 CheckBox {
-        //                     id: fileDialogSelectMultiple
-        //                     text: "Select Multiple Files"
-        //                     Binding on checked { value: fileDialog.selectMultiple }
-        //                 }
-        //                 CheckBox {
-        //                     id: fileDialogOpenFiles
-        //                     text: "Open Files After Accepting"
-        //                 }
-        //                 CheckBox {
-        //                     id: fileDialogSidebarVisible
-        //                     text: "Show Sidebar"
-        //                     checked: fileDialog.sidebarVisible
-        //                     Binding on checked { value: fileDialog.sidebarVisible }
-        //                 }
-        //                 CheckBox {
-        //                     id: fileDialogVisible
-        //                     text: "Visible"
-        //                     Binding on checked { value: fileDialog.visible }
-        //                 }
-        //                 Label {
-        //                     text: "<b>current view folder:</b> " + fileDialog.folder
-        //                 }
-        //                 Label {
-        //                     text: "<b>name filters:</b> {" + fileDialog.nameFilters + "}"
-        //                 }
-        //                 Label {
-        //                     text: "<b>current filter:</b>" + fileDialog.selectedNameFilter
-        //                 }
-        //                 Label {
-        //                     text: "<b>chosen files:</b> " + fileDialog.fileUrls
-        //                 }
-        //                 Label {
-        //                     text: "<b>chosen single path:</b> " + fileDialog.fileUrl
-        //                 }
-        //             }
-        //         }
-
-        Rectangle {
-            id: bottomBar
-            height: buttonRow.height * 1.2
-            color: Qt.darker(palette.window, 1.1)
-            border.color: Qt.darker(palette.window, 1.3)
-            Row {
-                id: buttonRow
-                spacing: 6
-                anchors.left: parent.left
-                anchors.leftMargin: 12
-                height: implicitHeight
-                width: parent.width
-                Button {
-                    text: "Menu"
-                    anchors.verticalCenter: parent.verticalCenter
-                    onClicked: {contextMenu.popup()}
-                }
-                Button {
-                    text: "Upload Image"
-                    anchors.verticalCenter: parent.verticalCenter
-                    onClicked: idfileDialog.open()
-                }
-                Button {
-                    text: "Send Image"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-//                Button {
-//                    text: "Settings"
-//                    //                     tooltip: "go to my home directory"
-//                    anchors.verticalCenter: parent.verticalCenter
-//                    //enabled: idfileDialog.shortcuts.hasOwnProperty("Settings")
-//                    onClicked: idfileDialog.folder = idfileDialog.shortcuts.home
-//                }
-            }
+    Column {
+        id: idMyImageContainer
+        width: 700
+        height: 700
+        x: 350
+        y: 100
+        opacity: 0
+        spacing: 15
+        Text {
+            id: idMyText
+            font.pixelSize: 20
+            color: "white"
+            style: Text.Raised
+            text: ""
+        }
+        Image {
+            id: idMyImage
+            width: 500
+            height: 500
+            //            anchors.centerIn: parent
+            source: ""
+        }
+        NumberAnimation {
+            id: idAnimateImage
+            running: false
+            target: idMyImageContainer
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 2000
+            easing.type: Easing.OutQuad
         }
     }
-    Menu {
-            id: contextMenu
-            MenuItem { text: "View Image" }
-            MenuItem { text: "ReshapeImage" }
-            MenuItem { text: "Paste" }
-        }
 
+
+
+    Rectangle {
+        id: bottomBar
+        height: buttonRow.height * 1.2
+        color: Qt.darker(palette.window, 1.1)
+        border.color: Qt.darker(palette.window, 1.3)
+        Row {
+            id: buttonRow
+            spacing: 6
+            anchors.left: parent.left
+            anchors.leftMargin: 12
+            height: implicitHeight
+            width: parent.width
+            Button {
+                text: "Menu"
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: {contextMenu.popup()}
+            }
+            Button {
+                text: "Upload Image"
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: idfileDialog.open()
+            }
+
+            Button {
+                text: "Send Image"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            Button {
+                text: "Load Image"
+                onClicked: {
+                    //si on clique une fois we load the image
+                    // si on clique deux fois we Unload the image
+                    bLoad = !bLoad
+                }
+            }
+
+        }
+    }
+
+    Menu {
+        id: contextMenu
+        cascade: true
+        MenuItem { text: "Reports" }
+        MenuItem { text: "ReshapeImage" }
+        MenuItem { text: "Paste" }
+//        Component.onCompleted: {
+//            insertMenu(0, menuDraft)
+//        }
+
+    }
+//    Menu {
+//        id: menuDraft
+//        MenuItem { text: "Classify par Date" }
+//        MenuItem { text: "ReshapeImage" }
+//        MenuItem { text: "Paste" }
+//    }
+
+    onBLoadChanged: {
+        console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
+        if (true === bLoad){
+            idAnimateImage.from = 0
+            idAnimateImage.to = 1
+            idAnimateImage.running = true
+
+        }
+        else {
+            idAnimateImage.from = 1
+            idAnimateImage.to = 0
+            idAnimateImage.running = true
+        }
+    }
 }
+
+
+//                 ScrollView {
+//                     id: scrollView
+//                     anchors {
+//                         left: parent.left
+//                         right: parent.right
+//                         top: parent.top
+//                         bottom: bottomBar.top
+//                         leftMargin: 12
+//                     }
+//                     ColumnLayout {
+//                         spacing: 8
+//                         Item { Layout.preferredHeight: 4 } // padding
+//                         Label {
+//                             font.bold: true
+//                             text: "File dialog properties:"
+//                         }
+//                         CheckBox {
+//                             id: fileDialogModal
+//                             text: "Modal"
+//                             checked: true
+//                             Binding on checked { value: fileDialog.modality != Qt.NonModal }
+//                         }
+//                         CheckBox {
+//                             id: fileDialogSelectFolder
+//                             text: "Select Folder"
+//                             Binding on checked { value: fileDialog.selectFolder }
+//                         }
+//                         CheckBox {
+//                             id: fileDialogSelectExisting
+//                             text: "Select Existing Files"
+//                             checked: true
+//                             Binding on checked { value: fileDialog.selectExisting }
+//                         }
+//                         CheckBox {
+//                             id: fileDialogSelectMultiple
+//                             text: "Select Multiple Files"
+//                             Binding on checked { value: fileDialog.selectMultiple }
+//                         }
+//                         CheckBox {
+//                             id: fileDialogOpenFiles
+//                             text: "Open Files After Accepting"
+//                         }
+//                         CheckBox {
+//                             id: fileDialogSidebarVisible
+//                             text: "Show Sidebar"
+//                             checked: fileDialog.sidebarVisible
+//                             Binding on checked { value: fileDialog.sidebarVisible }
+//                         }
+//                         CheckBox {
+//                             id: fileDialogVisible
+//                             text: "Visible"
+//                             Binding on checked { value: fileDialog.visible }
+//                         }
+//                         Label {
+//                             text: "<b>current view folder:</b> " + fileDialog.folder
+//                         }
+//                         Label {
+//                             text: "<b>name filters:</b> {" + fileDialog.nameFilters + "}"
+//                         }
+//                         Label {
+//                             text: "<b>current filter:</b>" + fileDialog.selectedNameFilter
+//                         }
+//                         Label {
+//                             text: "<b>chosen files:</b> " + fileDialog.fileUrls
+//                         }
+//                         Label {
+//                             text: "<b>chosen single path:</b> " + fileDialog.fileUrl
+//                         }
+//                     }
+//                 }
