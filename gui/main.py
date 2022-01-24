@@ -4,12 +4,14 @@ It uses Pyside2 engine from QML.
 """
 
 # Imports
+import os
 import sys
-import PySide2
-from PySide2.QtCore import QUrl
+import PySide2.QtQml
+from PySide2.QtQuick import QQuickView
+from PySide2.QtCore import Qt, QUrl
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
-from PySide2.QtQuick import QQuickView
+
 
 
 
@@ -19,17 +21,11 @@ if __name__ == '__main__':
     # Create the application
     app = QGuiApplication(sys.argv)
     # Create the engine
-    engine = QQmlApplicationEngine()
-    # Create the view
-    view = QQuickView()
-    # Load the QML file
-    view.setSource(QUrl('main.qml'))
-    # Show the view
-    view.show()
-    # Execute the application
-    sys.exit(app.exec_())
+    engine = QQmlApplicationEngine()  
 
+    #engine.load(QUrl(QStringLiteral("main.qml")))
+    engine.load(os.path.join(os.path.dirname(__file__), "main.qml"))
     
-  
-
-
+    if not engine.rootObjects():
+        sys.exit(-1)
+    sys.exit(app.exec_())	
