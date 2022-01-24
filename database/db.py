@@ -22,7 +22,7 @@ def insert_card(Name,DIE,classification_result,Confidence,Bounding_box):
     path = path + '/test.db'
     con = create_connection(path)
     cur = con.cursor()
-    cur.execute("create table if not exists Carte (Name,DIE,classification_result,Confidence,Bounding_box,Date)")
+    cur.execute("create table if not exists Carte (Name,DIE,Decision,Confidence,Bounding_box,Date)")
     cur.execute("insert into Carte values (?,?,?,?,?,?)", (Name,DIE,classification_result,Confidence,Bounding_box,todays_date))
     con.commit()
     con.close()
@@ -39,7 +39,7 @@ def generate_report(case=0, DIE=1, decision = "Defected", date = "2022"):
     elif case == 1 :
         cur.execute(f"select * from carte where DIE = {DIE} order by Date DESC")
     elif case == 2 :
-        cur.execute(f"select * from carte where classification_result LIKE '{decision}' order by Date DESC")
+        cur.execute(f"select * from carte where Decision LIKE '{decision}' order by Date DESC")
     elif case == 3 :
         cur.execute(f"select * from carte where Date LIKE '{date}%' order by Date DESC")
     results = cur.fetchall()
@@ -57,7 +57,7 @@ def save_report(case=0, DIE=1, decision = "Defected", date = "2022"):
     filename = "report"+"_"+datetime.today().strftime('%Y-%m-%d-%Hh%Mm%S')+".csv"
     fp = open(filename, "w", newline='')
     myFile = csv.writer(fp, delimiter = ',')
-    myFile.writerow(['Card_Name','DIE','classification_result','Confidence','Bounding_box','Date'])
+    myFile.writerow(['Card_Name','DIE','Decision','Confidence','Bounding_box','Date'])
     myFile.writerows(res)
     fp.close()
 
