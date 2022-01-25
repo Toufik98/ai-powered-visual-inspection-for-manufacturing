@@ -27,18 +27,9 @@ Item {
 
 
 
-    //    Item {
-    //        width: 580
-    //        height: 400
-    //        SystemPalette { id: palette }
-    //        clip: true
-
     FileDialog {
         id: idfileDialog
-        title: "Choose File"
-        //            selectExisting: fileDialogSelectExisting.checked
-        //            selectMultiple: fileDialogSelectMultiple.checked
-        //            selectFolder: fileDialogSelectFolder.checked
+        title: "Choose "
         folder: shortcuts.pictures
         nameFilters: [ "Image files (*.png *.jpg)"]
         selectedNameFilter: "All files (*)"
@@ -117,6 +108,9 @@ Item {
             Button {
                 text: "Send Image"
                 anchors.verticalCenter: parent.verticalCenter
+                onClicked: {
+                    QmlConnector.send_image()
+                }
             }
             Button {
                 text: "Display Image"
@@ -126,8 +120,15 @@ Item {
                     bLoad = !bLoad
                 }
             }
-
         }
+    }
+
+    Text {
+        id: idMyText2
+        font.pixelSize: 20
+        color: "white"
+        style: Text.Raised
+        text: "Merde"
     }
 
     Menu {
@@ -136,19 +137,9 @@ Item {
         MenuItem { text: "Reports" }
         MenuItem { text: "ReshapeImage" }
         MenuItem { text: "Paste" }
-//        Component.onCompleted: {
-//            insertMenu(0, menuDraft)
-//        }
-
     }
-//    Menu {
-//        id: menuDraft
-//        MenuItem { text: "Classify par Date" }
-//        MenuItem { text: "ReshapeImage" }
-//        MenuItem { text: "Paste" }
-//    }
 
-    onBLoadChanged: {
+   /*onBLoadChanged: {
         console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
         if (true === bLoad){
             idAnimateImage.from = 0
@@ -161,77 +152,12 @@ Item {
             idAnimateImage.to = 0
             idAnimateImage.running = true
         }
+    }*/
+
+    Connections {
+        target: QmlConnector
+        function onLabel(Label) {
+            idMyText2.text = Label
+        }
     }
 }
-
-
-//                 ScrollView {
-//                     id: scrollView
-//                     anchors {
-//                         left: parent.left
-//                         right: parent.right
-//                         top: parent.top
-//                         bottom: bottomBar.top
-//                         leftMargin: 12
-//                     }
-//                     ColumnLayout {
-//                         spacing: 8
-//                         Item { Layout.preferredHeight: 4 } // padding
-//                         Label {
-//                             font.bold: true
-//                             text: "File dialog properties:"
-//                         }
-//                         CheckBox {
-//                             id: fileDialogModal
-//                             text: "Modal"
-//                             checked: true
-//                             Binding on checked { value: fileDialog.modality != Qt.NonModal }
-//                         }
-//                         CheckBox {
-//                             id: fileDialogSelectFolder
-//                             text: "Select Folder"
-//                             Binding on checked { value: fileDialog.selectFolder }
-//                         }
-//                         CheckBox {
-//                             id: fileDialogSelectExisting
-//                             text: "Select Existing Files"
-//                             checked: true
-//                             Binding on checked { value: fileDialog.selectExisting }
-//                         }
-//                         CheckBox {
-//                             id: fileDialogSelectMultiple
-//                             text: "Select Multiple Files"
-//                             Binding on checked { value: fileDialog.selectMultiple }
-//                         }
-//                         CheckBox {
-//                             id: fileDialogOpenFiles
-//                             text: "Open Files After Accepting"
-//                         }
-//                         CheckBox {
-//                             id: fileDialogSidebarVisible
-//                             text: "Show Sidebar"
-//                             checked: fileDialog.sidebarVisible
-//                             Binding on checked { value: fileDialog.sidebarVisible }
-//                         }
-//                         CheckBox {
-//                             id: fileDialogVisible
-//                             text: "Visible"
-//                             Binding on checked { value: fileDialog.visible }
-//                         }
-//                         Label {
-//                             text: "<b>current view folder:</b> " + fileDialog.folder
-//                         }
-//                         Label {
-//                             text: "<b>name filters:</b> {" + fileDialog.nameFilters + "}"
-//                         }
-//                         Label {
-//                             text: "<b>current filter:</b>" + fileDialog.selectedNameFilter
-//                         }
-//                         Label {
-//                             text: "<b>chosen files:</b> " + fileDialog.fileUrls
-//                         }
-//                         Label {
-//                             text: "<b>chosen single path:</b> " + fileDialog.fileUrl
-//                         }
-//                     }
-//                 }

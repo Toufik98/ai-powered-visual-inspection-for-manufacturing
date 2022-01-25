@@ -114,7 +114,7 @@ class Predict:
         label_index = np.argmax(self.prediction)
         # If defected
         if label_index == 0:
-            CAM2 = tf.preprocessing.image.img_to_array(self.CAM, dtype=np.uint8)
+            CAM2 = tf.keras.preprocessing.image.img_to_array(self.CAM, dtype=np.uint8)
             thresh = cv2.threshold(CAM2, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
             # find contours and get the external one
