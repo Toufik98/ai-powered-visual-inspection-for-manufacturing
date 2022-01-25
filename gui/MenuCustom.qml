@@ -119,7 +119,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
             }
             Button {
-                text: "Load Image"
+                text: "Display Image"
                 onClicked: {
                     //si on clique une fois we load the image
                     // si on clique deux fois we Unload the image
