@@ -16,7 +16,7 @@ def create_connection(db_file):
         print(e)
 
 def insert_card(Name,DIE,classification_result,Confidence,Bounding_box):
-    todays_date =  datetime(2021, 11, 1).strftime('%Y-%m-%d-%Hh%Mm')
+    todays_date =  datetime.today().strftime('%Y-%m-%d-%Hh%Mm') #datetime(2021, 11, 1).strftime('%Y-%m-%d-%Hh%Mm')
     path = os.getcwd()
     path = path.replace(os.sep, '/')
     path = path + '/test.db'
