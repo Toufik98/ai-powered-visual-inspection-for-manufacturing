@@ -16,7 +16,7 @@ def create_connection(db_file):
         print(e)
 
 def insert_card(Name,DIE,classification_result,Confidence,Bounding_box):
-    todays_date = datetime.today().strftime('%Y-%m-%d')
+    todays_date =  datetime(2021, 11, 1).strftime('%Y-%m-%d-%Hh%Mm')
     path = os.getcwd()
     path = path.replace(os.sep, '/')
     path = path + '/test.db'
@@ -27,7 +27,7 @@ def insert_card(Name,DIE,classification_result,Confidence,Bounding_box):
     con.commit()
     con.close()
 
-def generate_report(case=0, DIE=1, decision = "Defected", date = "2022"):
+def generate_report(case=0, DIE=1, decision = "Defected",date ="2022"):
     # 0: generique  1: Par DIE  2: Par Class  3: Par Date
     path = os.getcwd()
     path = path.replace(os.sep, '/')
@@ -48,13 +48,9 @@ def generate_report(case=0, DIE=1, decision = "Defected", date = "2022"):
 
 
 def save_report(case=0, DIE=1, decision = "Defected", date = "2022"):
-    # 0: generique  1: Par DIE  2: Par Class  3: Par Date
-    path = os.getcwd()
-    path = path.replace(os.sep, '/')
-    path = path + '/test.db'    
-    res = generate_report(case, DIE, decision, date)
-
-    filename = "report"+"_"+datetime.today().strftime('%Y-%m-%d-%Hh%Mm%S')+".csv"
+    # 0: generique  1: Par DIE  2: Par Class  3: Par Date    
+    res = generate_report(case, DIE, decision,date)
+    filename = "report"+"_"+datetime.today().strftime('%Y-%m-%d')+".csv"
     fp = open(filename, "w", newline='')
     myFile = csv.writer(fp, delimiter = ',')
     myFile.writerow(['Card_Name','DIE','Decision','Confidence','Bounding_box','Date'])
@@ -62,17 +58,17 @@ def save_report(case=0, DIE=1, decision = "Defected", date = "2022"):
     fp.close()
 
 if __name__ == '__main__':
-
-    # insert_card("test_card_1",4,"Defected",99,"0,100,21,57")
-    # insert_card("test_card_2",3,"NOT Defected",97,"0,0,0,0")
-    # insert_card("test_card_4",4,"NOT Defected",97,"0,0,0,0")
-    # insert_card("test_card_5",4,"NOT Defected",97,"0,0,0,0")
-    # insert_card("test_card_69",1,"Defected",97,"0,0,0,0")
-
+    
+    insert_card("AE00005_124507_00_1_2_2001.jpg",3,"Defected",99,"0,100,21,57")
+    insert_card("test_card_2",1,"NOT Defected",97,"0,0,0,0")
+    insert_card("test_card_4",4,"NOT Defected",97,"0,0,0,0")
+    insert_card("test_card_5",4,"NOT Defected",97,"0,0,0,0")
+    insert_card("test_card_69",1,"Defected",97,"0,0,0,0")
+    
     # r = generate_report_date("2022-02-01")
     # print(r)
     # insert_card("test_card_7",4,"Defected",90,"0,0,0,10")
     # save_report(2,0)
     # r = generate_report()
     # print(r)
-    save_report(1)
+    save_report(0)
