@@ -80,6 +80,7 @@ class QmlConnector(QObject):
         """
         # Clean up the path 
         path = path.replace('file://', '')
+        print("Izannnnnn: ",path)
         # Read image from path
         image = cv2.imread(path)
         if image is None:

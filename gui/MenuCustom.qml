@@ -35,7 +35,7 @@ Item {
         selectedNameFilter: "All files (*)"
         onAccepted: {
             var path = idfileDialog.fileUrl.toString();
-            console.log(path)
+            //console.log("File dialog: "+path)
             idMyImage.source = Qt.resolvedUrl(path)
             var index = path.lastIndexOf("/") + 1;
             var filename = path.substr(index);
@@ -162,7 +162,7 @@ Item {
         }
     }
 
-
+    //section Drag and drop
     Rectangle {
         y: 350
         width: 600
@@ -172,13 +172,15 @@ Item {
             id: dropArea
             anchors.fill: parent
             onDropped: {
-                var path = dropArea.fileUrl.toString();
+                var path = drop.text
+                console.log("ppppppppppppppppath: "+path)
                 console.log(path)
-                idMyImage.source = Qt.resolvedUrl(path)
-                var index = path.lastIndexOf("/") + 1;
-                var filename = path.substr(index);
-                idMyText.text = filename
                 QmlConnector.load_image(path)
+                //idMyImage.source = Qt.resolvedUrl(path)
+                //var index = path.lastIndexOf("/") + 1
+                //var filename = path.substr(index)
+                //idMyText.text = filename
+                //QmlConnector.load_image(path)
             }
             onEntered: {
                 console.log("Entred")
@@ -188,4 +190,8 @@ Item {
             }
         }
     }
+    //section resultats
+
+
 }
+
