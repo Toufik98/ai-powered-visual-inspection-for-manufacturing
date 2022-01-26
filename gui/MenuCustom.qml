@@ -82,6 +82,7 @@ Item {
 
 
 
+
     Rectangle {
         id: bottomBar
         height: buttonRow.height * 1.2
@@ -139,7 +140,7 @@ Item {
         MenuItem { text: "Paste" }
     }
 
-   /*onBLoadChanged: {
+   onBLoadChanged: {
         console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
         if (true === bLoad){
             idAnimateImage.from = 0
@@ -152,7 +153,7 @@ Item {
             idAnimateImage.to = 0
             idAnimateImage.running = true
         }
-    }*/
+    }
 
     Connections {
         target: QmlConnector
@@ -160,4 +161,31 @@ Item {
             idMyText2.text = Label
         }
     }
+
+
+    Rectangle {
+        y: 350
+        width: 600
+        height: 300
+    DropArea {
+        id: dropArea
+        anchors.fill: parent
+        
+        
+        onDropped: {
+            console.log("ondropped")
+        }
+        onEntered: {
+            console.log("onEntered")
+        }
+        onExited: {
+            console.log("Onexited")
+        
+       
+    
+            
+        }
+    }
+
+
 }
