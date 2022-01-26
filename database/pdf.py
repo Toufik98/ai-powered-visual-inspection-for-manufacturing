@@ -1,3 +1,9 @@
+"""
+This program allows to generate pdf synthesis report. Make sure the fpdf package is well installed.
+"""
+
+#pip install fpdf
+
 from fpdf import FPDF
 import csv
 import seaborn as sns
