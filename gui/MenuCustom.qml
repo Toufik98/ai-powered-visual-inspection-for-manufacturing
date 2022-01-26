@@ -167,25 +167,25 @@ Item {
         y: 350
         width: 600
         height: 300
-    DropArea {
-        id: dropArea
-        anchors.fill: parent
-        
-        
-        onDropped: {
-            console.log("ondropped")
-        }
-        onEntered: {
-            console.log("onEntered")
-        }
-        onExited: {
-            console.log("Onexited")
-        
-       
-    
-            
+        // Instanciate DropArea
+        DropArea {
+            id: dropArea
+            anchors.fill: parent
+            onDropped: {
+                var path = dropArea.fileUrl.toString();
+                console.log(path)
+                idMyImage.source = Qt.resolvedUrl(path)
+                var index = path.lastIndexOf("/") + 1;
+                var filename = path.substr(index);
+                idMyText.text = filename
+                QmlConnector.load_image(path)
+            }
+            onEntered: {
+                console.log("Entred")
+            }
+            onExited: {
+                console.log("Exited")
+            }
         }
     }
-
-
 }
