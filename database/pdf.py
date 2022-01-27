@@ -1,9 +1,3 @@
-"""
-This program allows to generate pdf synthesis report. Make sure the fpdf package is well installed.
-"""
-
-#pip install fpdf
-
 from fpdf import FPDF
 import csv
 import seaborn as sns
@@ -70,7 +64,7 @@ class PDF(FPDF):
         self.add_page()
         # create a cell
         
-
+        
         # add another cell
         self.print_chapter( 'Results of inspection'," ")
         
@@ -82,17 +76,21 @@ class PDF(FPDF):
         col_width =  190/6  # distributpdfe content evenly
         #pdf.set_font(size = 0)
         self.set_font('Times', '', 6)
-        line_height = pdf.font_size * 2.5
+        line_height = self.font_size * 2.5
+        
         for row in data:
             for datum in row:
               self.cell(col_width, line_height, str(datum), border=1, align="C"  )
             self.ln(line_height)
         self.cell(190, 10, txt =" ",
             ln = 2, align = 'C')
+        
         self.set_font('Arial', '', 10)
         # Add counting of defected/ Not defected according to dies
         df = pd.DataFrame(data[1:],columns = data[0])
+        print(df.head())
         sns_plot1 = sns.histplot(df, x="Decision", hue= "DIE",multiple="dodge",binwidth=3,shrink=.8)
+        
         sns_plot1.figure.savefig("output1.png")
         self.image("output1.png",x=50,w=100,h=70)
         plt.close(sns_plot1.figure)
@@ -102,11 +100,12 @@ class PDF(FPDF):
         sns_plot2.figure.savefig("output2.png")
         self.image("output2.png",x=50,w=100,h=70)
         plt.close(sns_plot2.figure)
-
+        
         # Add time series informations 
         df['Date'] = pd.to_datetime(df['Date']).dt.date
         dx =df.groupby(['Date','Decision'])["Card_Name"].count()
         dx= dx.reset_index()
+        n= len(dx["Decision"].unique())
         palette = sns.color_palette("mako_r", 2)
         sns_plot3 = sns.lineplot(x="Date", y='Card_Name',
                     hue="Decision",
@@ -118,34 +117,32 @@ class PDF(FPDF):
         plt.close(sns_plot3.figure)
         # save the pdf with name .pdf
 
-        pdf.cell(190, 10, txt =" ",
+        self.cell(190, 10, txt =" ",
             ln = 2, align = 'C')
-        
         # generate conclusion according to numbers of defected and non defecte cards
-        dy = df["Decision"].value_counts()
         
-        if dy['Defected']>= dy['NOT Defected']:
-          result = "negatif.txt"
-        elif  2*dy['Defected']> dy['NOT Defected']:
-          result = "medium.txt"
+        n_def = len(df[df["Decision"]=="Defected"])
+        n_notdef = len(df[df["Decision"]=="NOT Defected"])      
+        if n_def>= n_notdef:
+            result = "negatif.txt"
+        elif  2*n_def> n_notdef:
+            result = "medium.txt"
         else: 
             result = "positif.txt"
-      
+        # save pdf
+
         self.print_chapter( 'Conclusion', result)
 
-        # save pdf
         self.output(path+".pdf")
 
-
-    
-def load_report(name):
-  return list(csv.reader(open(name)))
-
-
+    def generate_report(self):
+        name = "report"+"_"+datetime.today().strftime('%Y-%m-%d')+".csv"
+        data = list(csv.reader(open(name)))
+        
+        self.fill_report(data,path = name [:-4])
+        print("Done")
 
 
 if __name__ == '__main__':
-  name = "report"+"_"+datetime.today().strftime('%Y-%m-%d')+".csv"
-  data = load_report(name)
   pdf = PDF()
-  pdf.fill_report(data,path = name [:-4])
+  pdf.generate_report()
