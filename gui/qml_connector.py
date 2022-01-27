@@ -39,10 +39,10 @@ class QmlConnector(QObject):
     This class is used to connect to QML and send signals to it.
     """
     label = Signal(str, arguments=['Label'])
-    x = Signal(int, arguments=['x'])
-    y = Signal(int, arguments=['y'])
-    width = Signal(int, arguments=['width'])
-    height = Signal(int, arguments=['height'])
+    x = Signal(int, arguments=['X'])
+    y = Signal(int, arguments=['Y'])
+    width = Signal(int, arguments=['Width'])
+    height = Signal(int, arguments=['Height'])
 
 
     def __init__(self,ip_address, port):
@@ -66,10 +66,10 @@ class QmlConnector(QObject):
 
         # Data to receive from the server
         
-        self.x = 0
+        """self.x = 0
         self.y = 0
         self.width = 0
-        self.height = 0
+        self.height = 0"""
         self.height_image = 0
         self.width_image = 0
         self.depth_image = 0
