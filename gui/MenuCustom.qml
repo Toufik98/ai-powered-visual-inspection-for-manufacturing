@@ -3,7 +3,8 @@ import QtQuick.Window 2.2
 //import QtQuick.Controls 2.0
 import QtQuick.Controls 2.3
 import QtQuick.Dialogs 1.2
-
+import QtPositioning 5.5
+import QtLocation 5.6
 
 ////
 
@@ -13,6 +14,7 @@ import QtQuick.Dialogs 1.2
 //import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.1
 //import QtQuick.Window 2.0
+
 
 
 
@@ -85,7 +87,7 @@ Item {
         }
     }
 
-
+  
 
 
     Rectangle {
@@ -151,100 +153,172 @@ Item {
     // this row will hold the buttons, to upload directly from dektop, and to generate reports
     ////////////////////////////////////////////////////////////////////////////////////////
    Row {
+       id: idFirstRow
        y: 80
        spacing: 10
-        Rectangle {
+        Item {
             width: 600
             height: 300
-            color: "#B6D5DA"
-            radius: 50
+            // color: "#B6D5DA"
+            // radius: 50
             
-            
-            Image {
-                id: idUploadImage
+            //Icon Upload
+            Rectangle{
                 x: 100
                 y: x
                 width: 100
                 height: 100
-                source: "app3.png"
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: idfileDialog.open()
-                }
-
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idUploadImage
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/upload.png"
+                
             }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        idfileDialog.open()
+                    }
+                }
+        }
+
             Text {
-                x: 105
-                y: 200
-                text: "Upload "
+                x: 110
+                y: 205
+                text: "Upload"
                 font.pixelSize: 22
             }
 
-            
-             Image {
-                id: idSendImage
+             //Icon send
+            Rectangle{
                 x: 250
                 y: 100
                 width: 100
                 height: 100
-                source: "sendtoserver.png"
-                MouseArea {
-                    anchors.fill: parent 
-                    onClicked: {QmlConnector.send_image()}
-                }
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idSendImage
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/send.png"
+                
             }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        QmlConnector.send_image()
+                    }
+                }
+        }
+            
+            
             Text {
-                x: 220
-                y: 200
+                x: 225
+                y: 205
                 text: "Send To Server"
                 font.pixelSize: 22
             }
 
-            Image {
-                id: idClassify
+        //Classify 
+           Rectangle{
                 x: 400
                 y: 100
                 width: 100
                 height: 100
-                source: "class.jpeg"
-                MouseArea {
-                    anchors.fill: parent 
-                    onClicked: {QmlConnector.send_image()}
-                }
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idClassify
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/inspect.png"
+                
             }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        QmlConnector.send_image()
+                    }
+                }
+        }
+           
             Text {
                 x: 400
-                y: 200
+                y: 205
                 text: "Classify "
                 font.pixelSize: 22
             }
-
+    
              
         }
        
             
 
-      
-
-
+    //section generate reports
        Item {
             width: 600
             height: 300
-        Rectangle {
-            anchors.fill: parent
-            color: "#B6D5DA"
-            radius: 50
-              Image {
-                id: idGenerateReport
+             Rectangle{
                 anchors.centerIn: parent
                 width: 100
                 height: 100
-                source: "report.png"
-                MouseArea {
-                    anchors.fill: parent 
-                    onClicked: {bLoadReport = !bLoadReport}
-                }
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idGenerateReports
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/generate_report.png"
+                
             }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        bLoadReport = true
+                    }
+                }
+        }
+       
             Text {
                 x: 220
                 y: 200
@@ -253,7 +327,7 @@ Item {
             }
         }
        }
-   }
+   
     ////////////////////////////////////////////////////////////////////////////////
     // this row will be responisble for visualsing the image uploaded, and predicted
     ////////////////////////////////////////////////////////////////////////////////
@@ -269,9 +343,19 @@ Item {
             color: "#B6D5DA"
             radius: 50
         }
-        Text {
+        
+        Image {
+                id: idDragAndDrop
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/drag_and_drop.png"
+            }
+
+            Text {
+                x: 200
+                y: 170
             text: "Drag and drop image"
-            anchors.centerIn: parent
             font.pixelSize: 22
         }
         // Instanciate DropArea
@@ -307,7 +391,7 @@ Item {
         height: 300
         Image {
             id: idMyImageAfterPrediction
-            visible: (labelLocal == "Defected") ? true: false
+            //visible: (labelLocal == "Defected") ? true: false
             source: ""
         }
         Rectangle {
@@ -315,7 +399,7 @@ Item {
             y: yLocal
             width: widthLocal
             height: heightLocal
-            visible: (labelLocal == "Defected") ? true: false
+            //visible: (labelLocal == "Defected") ? true: false
 
         }
         Rectangle {
@@ -324,6 +408,8 @@ Item {
             radius: 50
         } 
     }
+
+
     }
    
     //////////////////////////////////////////////////////////////////////////////
@@ -331,12 +417,12 @@ Item {
     //////////////////////////////////////////////////////////////////////////////
      Connections {
         target: QmlConnector
-        function onLabel(Label, x, y, width, height) {
+        function onLabel(Label, X, Y, Width, Height) {
             labelLocal = Label
-            xLocal = x
-            yLocal = y
-            widthLocal = width
-            heightLocal = height
+            xLocal = X
+            yLocal = Y
+            widthLocal = Width
+            heightLocal = Height
             idMyText2.text = Label
         }
     }
