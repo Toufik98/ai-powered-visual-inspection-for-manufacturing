@@ -5,5 +5,5 @@ import QtQuick.Controls 2.0
 
 Image {
 
-   source: "MU5TYL.png"
+   source: "back.jpg"
 }

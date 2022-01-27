@@ -49,6 +49,12 @@ Item {
             var filename = path.substr(index);
             idMyText.text = filename
             QmlConnector.load_image(path)
+            idMyImage_drop.source = Qt.resolvedUrl(path)
+            idMyRectangle_drop.width = 0
+            idMyRectangle_drop.height = 0
+            idMyRectangle_drop.x = 0
+            idMyRectangle_drop.y = 0
+
 
         }
         onRejected: { console.log("Rejected") }
@@ -119,13 +125,7 @@ Item {
         }
     }
 
-    Text {
-        id: idMyText2
-        font.pixelSize: 20
-        color: "white"
-        style: Text.Raised
-        text: "Merde"
-    }
+    
 
     Menu {
         id: contextMenu
@@ -228,7 +228,13 @@ Item {
                     }
                     onExited: parent.opacity = 1
                     onClicked: { 
-                        QmlConnector.send_image()
+                        var data = QmlConnector.send_image()
+                        console.log("data: " + data)
+                        idMyRectangle_drop.width = data[5]
+                        idMyRectangle_drop.height = data[6]
+                        idMyRectangle_drop.x = data[3]
+                        idMyRectangle_drop.y = data[4]
+                        
                     }
                 }
         }
@@ -380,9 +386,21 @@ Item {
                 console.log("Exited")
             }
         }
-         //ProgressBar {
-        //id: idPogressBar
-        //value: 0.5
+        Image {
+            id: idMyImage_drop
+            width: 224
+            height: 224
+            anchors.fill: parent
+            source: ""
+            Rectangle {
+                id: idMyRectangle_drop
+                width: 0
+                height: 0
+                color: "transparent"
+                border.color: "blue"
+
+            }
+        }
     //}
     }
     //section resultats
@@ -407,6 +425,8 @@ Item {
             color: "#B6D5DA"
             radius: 50
         } 
+        
+
     }
 
 
@@ -415,17 +435,7 @@ Item {
     //////////////////////////////////////////////////////////////////////////////
     //connection with the QmlConnector Component and catch the signals sent from Py
     //////////////////////////////////////////////////////////////////////////////
-     Connections {
-        target: QmlConnector
-        function onLabel(Label, X, Y, Width, Height) {
-            labelLocal = Label
-            xLocal = X
-            yLocal = Y
-            widthLocal = Width
-            heightLocal = Height
-            idMyText2.text = Label
-        }
-    }
+     
 
 
 }

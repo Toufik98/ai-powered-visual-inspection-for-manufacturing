@@ -26,6 +26,10 @@ sys.path.append(cwd + '/../grpc/')
 import rgb_image_pb2
 import rgb_image_pb2_grpc
 
+cwd = os.getcwd()
+sys.path.append(cwd + '/../database/')
+from Sqlite_db import Sqlite_db
+
 import PySide2 as Qt
 from PySide2.QtCore import QObject, Signal, Slot, QTimer, QThread, QMutex, QMutexLocker
 from PySide2.QtGui import QGuiApplication
@@ -39,10 +43,10 @@ class QmlConnector(QObject):
     This class is used to connect to QML and send signals to it.
     """
     label = Signal(str, arguments=['Label'])
-    x = Signal(int, arguments=['X'])
-    y = Signal(int, arguments=['Y'])
-    width = Signal(int, arguments=['Width'])
-    height = Signal(int, arguments=['Height'])
+    x_box = Signal(str, arguments=['X'])
+    y_box = Signal(str, arguments=['Y'])
+    width_box = Signal(str, arguments=['Width'])
+    height_box = Signal(str, arguments=['Height'])
 
 
     def __init__(self,ip_address, port):
@@ -65,18 +69,19 @@ class QmlConnector(QObject):
         self.depth = None
 
         # Data to receive from the server
-        
-        """self.x = 0
+        self.x = 0
         self.y = 0
         self.width = 0
-        self.height = 0"""
+        self.height = 0
         self.height_image = 0
         self.width_image = 0
         self.depth_image = 0
         self.confidence = 0
 
-    
-        
+        #Create database
+        self.db = Sqlite_db(cwd + '/../database/database.db')
+        self.db.create_cards_table()
+
 
     @Slot(str)
     def load_image(self, path):
@@ -107,8 +112,12 @@ class QmlConnector(QObject):
 
         self.image = image
         self.nm = image_name
+
+        
+        
+        
     
-    @Slot()
+    @Slot(result=list)
     def send_image(self):
         """
         Send an image to the server
@@ -126,24 +135,30 @@ class QmlConnector(QObject):
                 # make the call
                 print("Sending image to server...") 
                 response = self.stub.Predict(request)
+                print("Response : ",response.x)
+                print("Response : ",response.y)
                 if response.label != "":
                     # Send the response
-                    self.label.emit(response.label)
-                    self.x.emit(response.x)
-                    self.y.emit(response.y)
-                    self.width.emit(response.width)
-                    self.height.emit(response.height)
+                    self.label.emit(str(response.label))
+                    self.x = response.x
+                    self.y = response.y
+                    self.width = response.width
+                    self.height = response.height
                     self.height_image = response.height_image
                     self.width_image = response.width_image
                     self.depth_image = response.depth_image
                     self.confidence = response.confidence
                     print("Received response from server:")
+
+                    self.db.insert_card(self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height)
+
+                return [self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height]
+                
         except Exception as e:
             print("Error: ", e)
+    
+
         
-
-
-
 
 def main():
     """
@@ -162,7 +177,8 @@ def main():
     engine.rootContext().setContextProperty("QmlConnector", qml_connector)
 
     # Load QML file
-    engine.load(os.path.join(os.path.dirname(__file__), "main.qml"))
+    engine.load(os.path.join(os.path.dirname(__file__), "./main.qml"))
+
 
     # Execute the QApplication
     if not engine.rootObjects():
