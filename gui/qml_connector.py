@@ -39,6 +39,12 @@ class QmlConnector(QObject):
     This class is used to connect to QML and send signals to it.
     """
     label = Signal(str, arguments=['Label'])
+    x = Signal(int, arguments=['x'])
+    y = Signal(int, arguments=['y'])
+    width = Signal(int, arguments=['width'])
+    height = Signal(int, arguments=['height'])
+
+
     def __init__(self,ip_address, port):
         super(QmlConnector, self).__init__()
 
@@ -123,10 +129,10 @@ class QmlConnector(QObject):
                 if response.label != "":
                     # Send the response
                     self.label.emit(response.label)
-                    self.x = response.x
-                    self.y = response.y
-                    self.width = response.width
-                    self.height = response.height
+                    self.x.emit(response.x)
+                    self.y.emit(response.y)
+                    self.width.emit(response.width)
+                    self.height.emit(response.height)
                     self.height_image = response.height_image
                     self.width_image = response.width_image
                     self.depth_image = response.depth_image

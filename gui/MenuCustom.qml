@@ -24,6 +24,12 @@ Item {
 
     // true: load the image, false: Unload it
     property bool bLoad: false
+    property var  labelLocal: ""
+    property int  xLocal: 0
+    property int  yLocal: 0
+    property int  widthLocal: 0
+    property int  heightLocal: 0
+    property bool bLoadReport: false
 
 
 
@@ -65,7 +71,6 @@ Item {
             id: idMyImage
             width: 500
             height: 500
-            //            anchors.centerIn: parent
             source: ""
         }
         NumberAnimation {
@@ -100,19 +105,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: {contextMenu.popup()}
             }
-            Button {
-                text: "Upload Image"
-                anchors.verticalCenter: parent.verticalCenter
-                onClicked: idfileDialog.open()
-            }
-
-            Button {
-                text: "Send Image"
-                anchors.verticalCenter: parent.verticalCenter
-                onClicked: {
-                    QmlConnector.send_image()
-                }
-            }
+           
             Button {
                 text: "Display Image"
                 onClicked: {
@@ -154,19 +147,133 @@ Item {
             idAnimateImage.running = true
         }
     }
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // this row will hold the buttons, to upload directly from dektop, and to generate reports
+    ////////////////////////////////////////////////////////////////////////////////////////
+   Row {
+       y: 80
+       spacing: 10
+        Rectangle {
+            width: 600
+            height: 300
+            color: "#B6D5DA"
+            radius: 50
+            
+            
+            Image {
+                id: idUploadImage
+                x: 100
+                y: x
+                width: 100
+                height: 100
+                source: "app3.png"
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: idfileDialog.open()
+                }
 
-    Connections {
-        target: QmlConnector
-        function onLabel(Label) {
-            idMyText2.text = Label
+            }
+            Text {
+                x: 105
+                y: 200
+                text: "Upload "
+                font.pixelSize: 22
+            }
+
+            
+             Image {
+                id: idSendImage
+                x: 250
+                y: 100
+                width: 100
+                height: 100
+                source: "sendtoserver.png"
+                MouseArea {
+                    anchors.fill: parent 
+                    onClicked: {QmlConnector.send_image()}
+                }
+            }
+            Text {
+                x: 220
+                y: 200
+                text: "Send To Server"
+                font.pixelSize: 22
+            }
+
+            Image {
+                id: idClassify
+                x: 400
+                y: 100
+                width: 100
+                height: 100
+                source: "class.jpeg"
+                MouseArea {
+                    anchors.fill: parent 
+                    onClicked: {QmlConnector.send_image()}
+                }
+            }
+            Text {
+                x: 400
+                y: 200
+                text: "Classify "
+                font.pixelSize: 22
+            }
+
+             
         }
-    }
+       
+            
 
-    //section Drag and drop
-    Rectangle {
-        y: 350
+      
+
+
+       Item {
+            width: 600
+            height: 300
+        Rectangle {
+            anchors.fill: parent
+            color: "#B6D5DA"
+            radius: 50
+              Image {
+                id: idGenerateReport
+                anchors.centerIn: parent
+                width: 100
+                height: 100
+                source: "report.png"
+                MouseArea {
+                    anchors.fill: parent 
+                    onClicked: {bLoadReport = !bLoadReport}
+                }
+            }
+            Text {
+                x: 220
+                y: 200
+                text: "Generate Report"
+                font.pixelSize: 22
+            }
+        }
+       }
+   }
+    ////////////////////////////////////////////////////////////////////////////////
+    // this row will be responisble for visualsing the image uploaded, and predicted
+    ////////////////////////////////////////////////////////////////////////////////
+    Row {
+        id: idSecondRow
+        y: 400
+        spacing: 10
+    Item {
         width: 600
         height: 300
+         Rectangle {
+            anchors.fill: parent
+            color: "#B6D5DA"
+            radius: 50
+        }
+        Text {
+            text: "Drag and drop image"
+            anchors.centerIn: parent
+            font.pixelSize: 22
+        }
         // Instanciate DropArea
         DropArea {
             id: dropArea
@@ -189,8 +296,50 @@ Item {
                 console.log("Exited")
             }
         }
+         //ProgressBar {
+        //id: idPogressBar
+        //value: 0.5
+    //}
     }
     //section resultats
+    Item {
+        width: 600
+        height: 300
+        Image {
+            id: idMyImageAfterPrediction
+            visible: (labelLocal == "Defected") ? true: false
+            source: ""
+        }
+        Rectangle {
+            x: xLocal
+            y: yLocal
+            width: widthLocal
+            height: heightLocal
+            visible: (labelLocal == "Defected") ? true: false
+
+        }
+        Rectangle {
+            anchors.fill: parent
+            color: "#B6D5DA"
+            radius: 50
+        } 
+    }
+    }
+   
+    //////////////////////////////////////////////////////////////////////////////
+    //connection with the QmlConnector Component and catch the signals sent from Py
+    //////////////////////////////////////////////////////////////////////////////
+     Connections {
+        target: QmlConnector
+        function onLabel(Label, x, y, width, height) {
+            labelLocal = Label
+            xLocal = x
+            yLocal = y
+            widthLocal = width
+            heightLocal = height
+            idMyText2.text = Label
+        }
+    }
 
 
 }
