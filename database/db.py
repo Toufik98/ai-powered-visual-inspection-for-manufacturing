@@ -59,16 +59,17 @@ def save_report(case=0, DIE=1, decision = "Defected", date = "2022"):
 
 if __name__ == '__main__':
     
-    insert_card("AE00005_124507_00_1_2_2001.jpg",3,"Defected",99,"0,100,21,57")
-    insert_card("test_card_2",1,"NOT Defected",97,"0,0,0,0")
+    insert_card("AE00005_124507_00_1_2_2001.jpg",1,"Not Defected",99,"0,100,21,57")
+    insert_card("test_card_2",1,"Defected",97,"0,0,0,0")
+    """
     insert_card("test_card_4",4,"NOT Defected",97,"0,0,0,0")
     insert_card("test_card_5",4,"NOT Defected",97,"0,0,0,0")
     insert_card("test_card_69",1,"Defected",97,"0,0,0,0")
-    
+    """
     # r = generate_report_date("2022-02-01")
     # print(r)
     # insert_card("test_card_7",4,"Defected",90,"0,0,0,10")
     # save_report(2,0)
     # r = generate_report()
     # print(r)
-    save_report(0)
+    save_report()
