@@ -8,22 +8,26 @@ Window {
     height: 720
     visible: true
 
-//    Rectangle {
-//        anchors.fill: parent
-//        color: "lightblue"
-//    }
+    property bool bLoadReports: false
     Background {
 
     }
 
    MenuCustom {
+       bLoadReport: idRoot.bLoadReports
+       onBLoadReportChanged: {
+           console.log ("Load repppppppppppppppppppppport")
+           rep.z = 3
 
-       // For debug
-//       Rectangle {
-//           anchors.fill: parent
-//           color: "red"
-//       }
+       }
    }
+
+   
+   Reports {
+       id: rep
+       visible: bLoadReports
+   }
+  
 
 
 
