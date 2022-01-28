@@ -50,6 +50,7 @@ class QmlConnector(QObject):
     This class is used to connect to QML and send signals to it.
     """
     label = Signal(str, arguments=['Label'])
+    progress_value = Signal(float)
 
     x = Signal(int, arguments=['X'])
     y = Signal(int, arguments=['Y'])
@@ -96,6 +97,9 @@ class QmlConnector(QObject):
         self.db = Sqlite_db(cwd + '/../database/database.db')
         self.db.create_cards_table()
 
+        #Progess Value
+        self.progress = 0  
+           
 
     @Slot(str)
     def load_image(self, path):

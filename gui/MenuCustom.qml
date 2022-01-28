@@ -424,6 +424,7 @@ Item {
                 color: "transparent"
                 visible: bLoadResult
                 border.color: "red"
+                border.width: 3
 
             }
         }
