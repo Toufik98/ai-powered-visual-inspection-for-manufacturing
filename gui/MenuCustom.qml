@@ -40,7 +40,7 @@ Item {
         id: idfileDialog
         title: "Choose "
         folder: shortcuts.pictures
-        nameFilters: [ "Image files (*.png *.jpeg)"]
+        nameFilters: [ "Image files (*.png *.jpeg *.jpg *.gif)" ]
         selectedNameFilter: "All files (*)"
         onAccepted: {
             var path = idfileDialog.fileUrl.toString();
@@ -48,7 +48,7 @@ Item {
             idMyImage_drop.source = Qt.resolvedUrl(path)
             var index = path.lastIndexOf("/") + 1;
             var filename = path.substr(index);
-            idMyText.text = filename
+            //idMyText.text = filename
             QmlConnector.load_image(path)
             idMyImage_drop.source = Qt.resolvedUrl(path)
             idMyRectangle_drop.width = 0
