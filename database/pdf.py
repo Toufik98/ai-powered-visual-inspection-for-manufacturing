@@ -137,7 +137,7 @@ class PDF(FPDF):
 
         self.print_chapter( 'Conclusion', result)
 
-        self.output(path+".pdf")
+        self.output(path+datetime.today().strftime('-%Hh%Mm')+".pdf")
 
     def generate_report(self,directory = downloads_dir):
         name = "report"+"_"+datetime.today().strftime('%Y-%m-%d')+".csv"
