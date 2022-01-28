@@ -32,6 +32,7 @@ Item {
     property int  widthLocal: 0
     property int  heightLocal: 0
     property bool bLoadReport: false
+    property var  bLocalPath: ""
 
 
 
@@ -288,9 +289,9 @@ Item {
     
              
         }
+   
        
-            
-
+        
     //section generate reports
        Item {
             width: 600
@@ -348,7 +349,8 @@ Item {
             anchors.fill: parent
             color: "#B6D5DA"
             radius: 50
-        }
+         }
+        
         
         Image {
                 id: idDragAndDrop
@@ -361,19 +363,28 @@ Item {
             Text {
                 x: 200
                 y: 170
-            text: "Drag and drop image"
-            font.pixelSize: 22
+                text: "Drag and drop image"
+                font.pixelSize: 22
         }
+       
         // Instanciate DropArea
         DropArea {
             id: dropArea
             anchors.fill: parent
+            
             onDropped: {
                 var path = drop.text
-                console.log("ppppppppppppppppath: "+path)
-                console.log(path)
-                QmlConnector.load_image(path)
-                //idMyImage.source = Qt.resolvedUrl(path)
+                console.log("paaaaaaaaaaaaaath:   "+ path)
+                //todo replace
+                idMyImage_drop.source =  path.slice(0,-2)
+                console.log("idImageDropped.source :   "+ idMyImage_drop.source)
+
+                 //bLocalPath = path
+                //console.log("bLocalPath:   "+ bLocalPath)
+                //console.log("idImageDropped.source:  " + idMyImage_drop.source)
+                //idImageDropped.source = "file:///home/asma/ai-powered-visual-inspection-for-manufacturing/gui/MU5TYL.png"
+                // QmlConnector.load_image(path)
+                //idImageDropped.source = Qt.resolvedUrl(path)
                 //var index = path.lastIndexOf("/") + 1
                 //var filename = path.substr(index)
                 //idMyText.text = filename
@@ -386,6 +397,7 @@ Item {
                 console.log("Exited")
             }
         }
+
         Image {
             id: idMyImage_drop
             width: 224
@@ -401,8 +413,11 @@ Item {
 
             }
         }
-    //}
     }
+
+     
+
+    
     //section resultats
     Item {
         width: 600
@@ -428,9 +443,18 @@ Item {
         
 
     }
-
-
     }
+    //idImageDropped
+    Image {
+        width: 600
+        y: 400
+        height: 300
+        source: bLocalPath
+    }
+
+    
+
+  
    
     //////////////////////////////////////////////////////////////////////////////
     //connection with the QmlConnector Component and catch the signals sent from Py
