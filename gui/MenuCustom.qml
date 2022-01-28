@@ -314,7 +314,10 @@ Item {
                     }
                     onExited: parent.opacity = 1
                     onClicked: { 
-                        bLoadReport = true
+                        //bLoadReport = true
+                        var component = Qt.createComponent("sub_window.qml")
+                        var window    = component.createObject()
+                        window.show()
                     }
                 }
         }
@@ -325,6 +328,49 @@ Item {
                 text: "Generate Report"
                 font.pixelSize: 22
             }
+
+            //Download
+               Rectangle{
+                    x: 450
+                    y: 100
+                    width: 100
+                    height: 100
+                    color:  "#b8e0e7"
+                    radius: 100
+                Image {
+                    id: idDownload
+                    width: 50
+                    height: 50
+                    anchors.centerIn: parent
+                    source: "ICONS/Download.png"
+
+                }
+                MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                         property bool hovered: false
+                        onEntered:  {
+                            console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                            hovered = true
+                            parent.opacity = 0.5
+                        }
+                        onExited: parent.opacity = 1
+                        onClicked: {
+                            QmlConnector.download_csv()
+                            var popupComponent  = Qt.createComponent("msg_download.qml")
+                            var popup2 = popupComponent.createObject(idRoot, {"parent" : idRoot});
+                            popup2.open()
+                        }
+                    }
+            }
+
+               Text {
+                   x: 420
+                   y: 200
+                   text: "Download Data"
+                   font.pixelSize: 22
+               }
+
         }
        }
    
@@ -426,6 +472,10 @@ Item {
             idMyText2.text = Label
         }
     }
+
+     function give_date (dt){
+
+     }
 
 
 }

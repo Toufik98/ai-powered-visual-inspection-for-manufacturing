@@ -21,6 +21,9 @@ DISTFILES += \
     Background.qml \
     MenuCustom.qml \
     main.qml \
+    msg_download.qml \
+    msg_report.qml \
+    sub_window.qml
 
 
 #Gallery.qml \

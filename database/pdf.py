@@ -4,7 +4,11 @@ import seaborn as sns
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
+from pathlib import Path
 
+
+from gi.repository import GLib
+downloads_dir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
 
 class PDF(FPDF):
     def header(self):
@@ -88,7 +92,7 @@ class PDF(FPDF):
         self.set_font('Arial', '', 10)
         # Add counting of defected/ Not defected according to dies
         df = pd.DataFrame(data[1:],columns = data[0])
-        print(df.head())
+        #print(df.head())
         sns_plot1 = sns.histplot(df, x="Decision", hue= "DIE",multiple="dodge",binwidth=3,shrink=.8)
         
         sns_plot1.figure.savefig("output1.png")
@@ -106,7 +110,7 @@ class PDF(FPDF):
         dx =df.groupby(['Date','Decision'])["Card_Name"].count()
         dx= dx.reset_index()
         n= len(dx["Decision"].unique())
-        palette = sns.color_palette("mako_r", 2)
+        palette = sns.color_palette("mako_r", n)
         sns_plot3 = sns.lineplot(x="Date", y='Card_Name',
                     hue="Decision",
                     data=dx,palette=palette).set_title("Time-Series representation- Monthly aggregation")
@@ -135,11 +139,11 @@ class PDF(FPDF):
 
         self.output(path+".pdf")
 
-    def generate_report(self):
+    def generate_report(self,directory = downloads_dir):
         name = "report"+"_"+datetime.today().strftime('%Y-%m-%d')+".csv"
-        data = list(csv.reader(open(name)))
+        data = list(csv.reader(open(name)))     
         
-        self.fill_report(data,path = name [:-4])
+        self.fill_report(data,path = directory+'/'+name [:-4])        
         print("Done")
 
 

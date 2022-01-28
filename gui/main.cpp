@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    engine.load(QUrl(QStringLiteral("main.qml")));
+    engine.load(QUrl(QStringLiteral("/home/touzari/Documents/PFE/gui_rayane_lisa/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 
