@@ -199,6 +199,13 @@ Item {
                         idMyRectangle_drop.height = data[6]
                         idMyRectangle_drop.x = data[3]
                         idMyRectangle_drop.y = data[4]
+                        idName.text = data[0]
+                        idInspection.text = data[1]
+                        idConfidence.text = data[2]
+                        idIML.text = data[0].split("_")[3]
+                        idDie.text = data[0].split("_")[4]
+
+
                         
                     }
                 }
@@ -397,30 +404,87 @@ Item {
                 y: 50
                 width: parent.width
                 Text {
-                    text: "Label: "
+                    text: "Name : "
                     font.pixelSize: 16
                     }
                 Text {
-                    id: idLabel
+                    id: idName
                     text: ""
 
                 }
             }
-               Row {
-                   width: parent.width
-                   x: 100
-                   y: 150
+        }
+        
+        Row{
+            width : 600
+            Row {
+                x: 100
+                y: 100
+                width: parent.width
                 Text {
-                    text: "Card Name: "
+                    text: "Inspection : "
                     font.pixelSize: 16
                     }
                 Text {
-                    id: idCardName
+                    id: idInspection
                     text: ""
-                    
+
                 }
             }
         }
+        Row{
+            width : 600
+            Row {
+                x: 100
+                y: 150
+                width: parent.width
+                Text {
+                    text: "IML : "
+                    font.pixelSize: 16
+                    }
+                Text {
+                    id: idIML
+                    text: ""
+
+                }
+            }
+        }
+        Row{
+            width : 600
+            Row {
+                x: 100
+                y: 200
+                width: parent.width
+                Text {
+                    text: "Die: "
+                    font.pixelSize: 16
+                    }
+                Text {
+                    id: idDie
+                    text: ""
+
+                }
+            }
+        }
+        
+        Row{
+            width : 600
+            Row {
+                x: 100
+                y: 250
+                width: parent.width
+                Text {
+                    text: "Confidence of inspection : "
+                    font.pixelSize: 16
+                    }
+                Text {
+                    id: idConfidence
+                    text: ""
+
+                }
+            }
+        }
+
         
     }
 
