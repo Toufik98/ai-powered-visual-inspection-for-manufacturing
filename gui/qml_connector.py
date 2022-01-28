@@ -204,11 +204,6 @@ class QmlConnector(QObject):
     def report_csv_date(self, text):
         save_report(case=3, DIE=1, decision = "Defected",date =text)
         
-
-                    
-                
-        except Exception as e:
-            print("Error: ", e)
     
 def main():
     """
