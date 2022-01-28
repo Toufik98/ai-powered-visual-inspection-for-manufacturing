@@ -150,7 +150,7 @@ class QmlConnector(QObject):
                     self.confidence = response.confidence
                     print("Received response from server:")
 
-                    self.db.insert_card(self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height)
+                    #self.db.insert_card(self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height)
 
                 return [self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height]
                 

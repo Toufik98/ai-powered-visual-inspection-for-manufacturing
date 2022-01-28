@@ -40,12 +40,12 @@ Item {
         id: idfileDialog
         title: "Choose "
         folder: shortcuts.pictures
-        nameFilters: [ "Image files (*.png *.jpg)"]
+        nameFilters: [ "Image files (*.png *.jpeg)"]
         selectedNameFilter: "All files (*)"
         onAccepted: {
             var path = idfileDialog.fileUrl.toString();
             //console.log("File dialog: "+path)
-            idMyImage.source = Qt.resolvedUrl(path)
+            idMyImage_drop.source = Qt.resolvedUrl(path)
             var index = path.lastIndexOf("/") + 1;
             var filename = path.substr(index);
             idMyText.text = filename
@@ -61,7 +61,7 @@ Item {
         onRejected: { console.log("Rejected") }
     }
 
-    Column {
+    /*Column {
         id: idMyImageContainer
         width: 700
         height: 700
@@ -82,22 +82,13 @@ Item {
             height: 500
             source: ""
         }
-        NumberAnimation {
-            id: idAnimateImage
-            running: false
-            target: idMyImageContainer
-            property: "opacity"
-            from: 0
-            to: 1
-            duration: 2000
-            easing.type: Easing.OutQuad
-        }
-    }
+       
+    }*/
 
   
 
 
-    Rectangle {
+    /*Rectangle {
         id: bottomBar
         height: buttonRow.height * 1.2
         color: Qt.darker(palette.window, 1.1)
@@ -124,49 +115,23 @@ Item {
                 }
             }
         }
-    }
+    }*/
 
     
 
-    Menu {
-        id: contextMenu
-        cascade: true
-        MenuItem { text: "Reports" }
-        MenuItem { text: "ReshapeImage" }
-        MenuItem { text: "Paste" }
-    }
-
-   onBLoadChanged: {
-        console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
-        if (true === bLoad){
-            idAnimateImage.from = 0
-            idAnimateImage.to = 1
-            idAnimateImage.running = true
-
-        }
-        else {
-            idAnimateImage.from = 1
-            idAnimateImage.to = 0
-            idAnimateImage.running = true
-        }
-    }
     ////////////////////////////////////////////////////////////////////////////////////////
     // this row will hold the buttons, to upload directly from dektop, and to generate reports
     ////////////////////////////////////////////////////////////////////////////////////////
-   Row {
+   Item {
        id: idFirstRow
+       x: 200
        y: 80
-       spacing: 10
-        Item {
-            width: 600
-            height: 300
-            // color: "#B6D5DA"
-            // radius: 50
-            
+        width: 1200
+        height: 300
+        
             //Icon Upload
-            Rectangle{
+            Rectangle {
                 x: 100
-                y: x
                 width: 100
                 height: 100
                 color:  "#b8e0e7"
@@ -197,15 +162,14 @@ Item {
 
             Text {
                 x: 110
-                y: 205
+                y: 105
                 text: "Upload"
                 font.pixelSize: 22
             }
 
              //Icon send
-            Rectangle{
+            Rectangle {
                 x: 250
-                y: 100
                 width: 100
                 height: 100
                 color:  "#b8e0e7"
@@ -243,15 +207,14 @@ Item {
             
             Text {
                 x: 225
-                y: 205
+                y: 105
                 text: "Send To Server"
                 font.pixelSize: 22
             }
 
         //Classify 
-           Rectangle{
+           Rectangle {
                 x: 400
-                y: 100
                 width: 100
                 height: 100
                 color:  "#b8e0e7"
@@ -282,22 +245,16 @@ Item {
            
             Text {
                 x: 400
-                y: 205
+                y: 105
                 text: "Classify "
                 font.pixelSize: 22
             }
     
-             
-        }
-   
-       
         
     //section generate reports
-       Item {
-            width: 600
-            height: 300
+     
              Rectangle{
-                anchors.centerIn: parent
+                x: 550
                 width: 100
                 height: 100
                 color:  "#b8e0e7"
@@ -327,12 +284,12 @@ Item {
         }
        
             Text {
-                x: 220
-                y: 200
+                x: 500
+                y: 105
                 text: "Generate Report"
                 font.pixelSize: 22
             }
-        }
+        
        }
    
     ////////////////////////////////////////////////////////////////////////////////
@@ -340,10 +297,11 @@ Item {
     ////////////////////////////////////////////////////////////////////////////////
     Row {
         id: idSecondRow
-        y: 400
+        x: 150
+        y: 300
         spacing: 10
     Item {
-        width: 600
+        width: 300
         height: 300
          Rectangle {
             anchors.fill: parent
@@ -361,10 +319,10 @@ Item {
             }
 
             Text {
-                x: 200
+                x: 80
                 y: 170
                 text: "Drag and drop image"
-                font.pixelSize: 22
+                font.pixelSize: 16
         }
        
         // Instanciate DropArea
@@ -402,8 +360,8 @@ Item {
             id: idMyImage_drop
             width: 224
             height: 224
-            anchors.fill: parent
             source: ""
+            anchors.centerIn: parent
             Rectangle {
                 id: idMyRectangle_drop
                 width: 0
@@ -422,35 +380,52 @@ Item {
     Item {
         width: 600
         height: 300
-        Image {
-            id: idMyImageAfterPrediction
-            //visible: (labelLocal == "Defected") ? true: false
-            source: ""
-        }
-        Rectangle {
-            x: xLocal
-            y: yLocal
-            width: widthLocal
-            height: heightLocal
-            //visible: (labelLocal == "Defected") ? true: false
-
-        }
         Rectangle {
             anchors.fill: parent
             color: "#B6D5DA"
             radius: 50
         } 
+        Text {
+            x: 200
+            text: "Inspection Results:"
+            font.pixelSize: 22
+        }
+        Row {
+            width: 600
+            Row {
+                x: 100
+                y: 50
+                width: parent.width
+                Text {
+                    text: "Label: "
+                    font.pixelSize: 16
+                    }
+                Text {
+                    id: idLabel
+                    text: ""
+
+                }
+            }
+               Row {
+                   width: parent.width
+                   x: 100
+                   y: 150
+                Text {
+                    text: "Card Name: "
+                    font.pixelSize: 16
+                    }
+                Text {
+                    id: idCardName
+                    text: ""
+                    
+                }
+            }
+        }
         
+    }
 
     }
-    }
-    //idImageDropped
-    Image {
-        width: 600
-        y: 400
-        height: 300
-        source: bLocalPath
-    }
+    
 
     
 
@@ -460,6 +435,34 @@ Item {
     //connection with the QmlConnector Component and catch the signals sent from Py
     //////////////////////////////////////////////////////////////////////////////
      
+
+
+     
+   NumberAnimation {
+            id: idAnimateImage
+            running: false
+            target: idMyRectangle_drop
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 2000
+            easing.type: Easing.OutQuad
+        }
+
+   onBLoadChanged: {
+        console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
+        if (true === bLoad){
+            idAnimateImage.from = 0
+            idAnimateImage.to = 1
+            idAnimateImage.running = true
+
+        }
+        else {
+            idAnimateImage.from = 1
+            idAnimateImage.to = 0
+            idAnimateImage.running = true
+        }
+    }
 
 
 }
