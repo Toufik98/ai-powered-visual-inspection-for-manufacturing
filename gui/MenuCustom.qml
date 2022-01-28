@@ -25,7 +25,7 @@ Item {
     SystemPalette { id: palette }
 
     // true: load the image, false: Unload it
-    property bool bLoad: false
+    property bool bLoadResult: false
     property var  labelLocal: ""
     property int  xLocal: 0
     property int  yLocal: 0
@@ -162,6 +162,7 @@ Item {
                     }
                     onExited: parent.opacity = 1
                     onClicked: { 
+                        bLoadResult = false
                         idfileDialog.open()
                     }
                 }
@@ -252,7 +253,8 @@ Item {
                     }
                     onExited: parent.opacity = 1
                     onClicked: { 
-                        QmlConnector.send_image()
+                        bLoadResult = true
+
                     }
                 }
         }
@@ -390,6 +392,7 @@ Item {
             anchors.fill: parent
             
             onDropped: {
+                bLoadResult = false
                 var path = drop.text
                 console.log("paaaaaaaaaaaaaath:   "+ path)
                 //todo replace
@@ -419,7 +422,8 @@ Item {
                 width: 0
                 height: 0
                 color: "transparent"
-                border.color: "blue"
+                visible: bLoadResult
+                border.color: "red"
 
             }
         }
@@ -432,6 +436,7 @@ Item {
     Item {
         width: 600
         height: 300
+        visible: bLoadResult
         Rectangle {
             anchors.fill: parent
             color: "#B6D5DA"
@@ -555,7 +560,7 @@ Item {
             easing.type: Easing.OutQuad
         }
 
-   onBLoadChanged: {
+   /*onBLoadChanged: {
         console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
         if (true === bLoad){
             idAnimateImage.from = 0
@@ -568,7 +573,8 @@ Item {
             idAnimateImage.to = 0
             idAnimateImage.running = true
         }
-    }
+    }*/
+
     ////////////////////////////////////////////////////////////////////////////////////////
     // this row will hold the buttons, to upload directly from dektop, and to generate reports
     ////////////////////////////////////////////////////////////////////////////////////////
