@@ -32,7 +32,9 @@ Item {
     property int  widthLocal: 0
     property int  heightLocal: 0
     property bool bLoadReport: false
+
     property var  bLocalPath: ""
+
 
 
 
@@ -527,6 +529,333 @@ Item {
             idAnimateImage.running = true
         }
     }
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // this row will hold the buttons, to upload directly from dektop, and to generate reports
+    ////////////////////////////////////////////////////////////////////////////////////////
+   Row {
+       id: idFirstRow
+       y: 80
+       spacing: 10
+        Item {
+            width: 600
+            height: 300
+            // color: "#B6D5DA"
+            // radius: 50
+            
+            //Icon Upload
+            Rectangle{
+                x: 100
+                y: x
+                width: 100
+                height: 100
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idUploadImage
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/upload.png"
+                
+            }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        idfileDialog.open()
+                    }
+                }
+        }
+
+            Text {
+                x: 110
+                y: 205
+                text: "Upload"
+                font.pixelSize: 22
+            }
+
+             //Icon send
+            Rectangle{
+                x: 250
+                y: 100
+                width: 100
+                height: 100
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idSendImage
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/send.png"
+                
+            }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        QmlConnector.send_image()
+                    }
+                }
+        }
+            
+            
+            Text {
+                x: 225
+                y: 205
+                text: "Send To Server"
+                font.pixelSize: 22
+            }
+
+        //Classify 
+           Rectangle{
+                x: 400
+                y: 100
+                width: 100
+                height: 100
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idClassify
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/inspect.png"
+                
+            }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        QmlConnector.send_image()
+                    }
+                }
+        }
+           
+            Text {
+                x: 400
+                y: 205
+                text: "Classify "
+                font.pixelSize: 22
+            }
+    
+             
+        }
+       
+            
+
+    //section generate reports
+       Item {
+            width: 600
+            height: 300
+             Rectangle{
+                anchors.centerIn: parent
+                width: 100
+                height: 100
+                color:  "#b8e0e7"
+                radius: 100
+            Image {
+                id: idGenerateReports
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/generate_report.png"
+                
+            }
+            MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                     property bool hovered: false
+                    onEntered:  {
+                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        hovered = true
+                        parent.opacity = 0.5
+                    }
+                    onExited: parent.opacity = 1
+                    onClicked: { 
+                        //bLoadReport = true
+                        var component = Qt.createComponent("sub_window.qml")
+                        var window    = component.createObject()
+                        window.show()
+                    }
+                }
+        }
+       
+            Text {
+                x: 220
+                y: 200
+                text: "Generate Report"
+                font.pixelSize: 22
+            }
+
+            //Download
+               Rectangle{
+                    x: 450
+                    y: 100
+                    width: 100
+                    height: 100
+                    color:  "#b8e0e7"
+                    radius: 100
+                Image {
+                    id: idDownload
+                    width: 50
+                    height: 50
+                    anchors.centerIn: parent
+                    source: "ICONS/Download.png"
+
+                }
+                MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                         property bool hovered: false
+                        onEntered:  {
+                            console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                            hovered = true
+                            parent.opacity = 0.5
+                        }
+                        onExited: parent.opacity = 1
+                        onClicked: {
+                            QmlConnector.download_csv()
+                            var popupComponent  = Qt.createComponent("msg_download.qml")
+                            var popup2 = popupComponent.createObject(idRoot, {"parent" : idRoot});
+                            popup2.open()
+                        }
+                    }
+            }
+
+               Text {
+                   x: 420
+                   y: 200
+                   text: "Download Data"
+                   font.pixelSize: 22
+               }
+
+        }
+       }
+   
+    ////////////////////////////////////////////////////////////////////////////////
+    // this row will be responisble for visualsing the image uploaded, and predicted
+    ////////////////////////////////////////////////////////////////////////////////
+    Row {
+        id: idSecondRow
+        y: 400
+        spacing: 10
+    Item {
+        width: 600
+        height: 300
+         Rectangle {
+            anchors.fill: parent
+            color: "#B6D5DA"
+            radius: 50
+        }
+        
+        Image {
+                id: idDragAndDrop
+                width: 50
+                height: 50
+                anchors.centerIn: parent
+                source: "ICONS/drag_and_drop.png"
+            }
+
+            Text {
+                x: 200
+                y: 170
+            text: "Drag and drop image"
+            font.pixelSize: 22
+        }
+        // Instanciate DropArea
+        DropArea {
+            id: dropArea
+            anchors.fill: parent
+            onDropped: {
+                var path = drop.text
+                console.log("ppppppppppppppppath: "+path)
+                console.log(path)
+                QmlConnector.load_image(path)
+                //idMyImage.source = Qt.resolvedUrl(path)
+                //var index = path.lastIndexOf("/") + 1
+                //var filename = path.substr(index)
+                //idMyText.text = filename
+                //QmlConnector.load_image(path)
+            }
+            onEntered: {
+                console.log("Entred")
+            }
+            onExited: {
+                console.log("Exited")
+            }
+        }
+         //ProgressBar {
+        //id: idPogressBar
+        //value: 0.5
+    //}
+    }
+    //section resultats
+    Item {
+        width: 600
+        height: 300
+        Image {
+            id: idMyImageAfterPrediction
+            //visible: (labelLocal == "Defected") ? true: false
+            source: ""
+        }
+        Rectangle {
+            x: xLocal
+            y: yLocal
+            width: widthLocal
+            height: heightLocal
+            //visible: (labelLocal == "Defected") ? true: false
+
+        }
+        Rectangle {
+            anchors.fill: parent
+            color: "#B6D5DA"
+            radius: 50
+        } 
+    }
+
+
+    }
+   
+    //////////////////////////////////////////////////////////////////////////////
+    //connection with the QmlConnector Component and catch the signals sent from Py
+    //////////////////////////////////////////////////////////////////////////////
+     Connections {
+        target: QmlConnector
+        function onLabel(Label, X, Y, Width, Height) {
+            labelLocal = Label
+            xLocal = X
+            yLocal = Y
+            widthLocal = Width
+            heightLocal = Height
+            idMyText2.text = Label
+        }
+    }
+
+     function give_date (dt){
+
+     }
 
 
 }

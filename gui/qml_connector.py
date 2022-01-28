@@ -5,7 +5,7 @@ It will also use grpc client to send data to server
 
 # Importing libraries
 import sys
-import os
+import os, shutil
 import time
 import threading
 import queue
@@ -19,9 +19,16 @@ import cv2
 import argparse
 import zlib
 import base64
+from datetime import datetime
+from gi.repository import GLib
 
 # Change directory to the directory of this file
 cwd = os.getcwd()
+
+sys.path.append(cwd + '/../database/')
+from db import create_connection, insert_card, generate_report, save_report
+from pdf import PDF
+
 sys.path.append(cwd + '/../grpc/')
 import rgb_image_pb2
 import rgb_image_pb2_grpc
@@ -43,10 +50,13 @@ class QmlConnector(QObject):
     This class is used to connect to QML and send signals to it.
     """
     label = Signal(str, arguments=['Label'])
-    x_box = Signal(str, arguments=['X'])
-    y_box = Signal(str, arguments=['Y'])
-    width_box = Signal(str, arguments=['Width'])
-    height_box = Signal(str, arguments=['Height'])
+
+    x = Signal(int, arguments=['X'])
+    y = Signal(int, arguments=['Y'])
+    width = Signal(int, arguments=['Width'])
+    height = Signal(int, arguments=['Height'])
+    
+    text = Signal(str, arguments=['text'])
 
 
     def __init__(self,ip_address, port):
@@ -67,8 +77,12 @@ class QmlConnector(QObject):
         self.h = None
         self.w = None
         self.depth = None
+        self.die = None
 
         # Data to receive from the server
+
+        
+  
         self.x = 0
         self.y = 0
         self.width = 0
@@ -112,10 +126,8 @@ class QmlConnector(QObject):
 
         self.image = image
         self.nm = image_name
+        self.die = int(image_name[18])
 
-        
-        
-        
     
     @Slot(result=list)
     def send_image(self):
@@ -139,27 +151,65 @@ class QmlConnector(QObject):
                 print("Response : ",response.y)
                 if response.label != "":
                     # Send the response
-                    self.label.emit(str(response.label))
-                    self.x = response.x
-                    self.y = response.y
-                    self.width = response.width
-                    self.height = response.height
+                    self.label.emit(response.label)
+                    self.x.emit(response.x)
+                    self.y.emit(response.y)
+                    self.width.emit(response.width)
+                    self.height.emit(response.height)
+
                     self.height_image = response.height_image
                     self.width_image = response.width_image
                     self.depth_image = response.depth_image
                     self.confidence = response.confidence
-                    print("Received response from server:")
-
+                    insert_card(self.nm,self.die,response.label,self.confidence,str(response.x)+','+str(response.y)+','+str(response.width)+','+str(response.height)) 
                     #self.db.insert_card(self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height)
 
-                return [self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height]
+                    return [self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height]
+                    print("Received response from server:")
+
+        except Exception as e:
+            print("Error: ", e)
+        
+    @Slot() 
+    def report_csv(self):
+        save_report(case=0, DIE=1, decision = "Defected",date ="2022")
+        
+    @Slot()  # a completer
+    def download_csv(self):
+        
+        downloads_dir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
+        f = "report"+"_"+datetime.today().strftime('%Y-%m-%d')+".csv"
+        shutil.copy(f, downloads_dir)
+            
+        
+    @Slot()
+    def report_pdf(self):        
+        pdf = PDF()
+        pdf.generate_report()  
+        
+    @Slot(str)  
+    def report_csv_die(self, text):        
+        save_report(case=1, DIE=int(text), decision = "Defected",date ="2022")
+        
+        
+    @Slot(str) 
+    def report_csv_type(self, text):
+        if text == '0': decision = "Defected"
+        elif text == '1': decision = "NOT Defected"
+        
+        save_report(case=2, DIE=1, decision = decision,date ="2022")
+            
+        
+    @Slot(str) 
+    def report_csv_date(self, text):
+        save_report(case=3, DIE=1, decision = "Defected",date =text)
+        
+
+                    
                 
         except Exception as e:
             print("Error: ", e)
     
-
-        
-
 def main():
     """
     Main function
