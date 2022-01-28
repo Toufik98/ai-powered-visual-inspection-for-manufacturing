@@ -57,6 +57,11 @@ Item {
             idMyRectangle_drop.height = 0
             idMyRectangle_drop.x = 0
             idMyRectangle_drop.y = 0
+            idDie.text = ""
+            idIML.text = ""
+            idName.text = ""
+            idInspection.text = ""
+            idConfidence.text = ""
 
 
         }
