@@ -260,7 +260,7 @@ Item {
             Text {
                 x: 400
                 y: 105
-                text: "Classify "
+                text: "Inspect"
                 font.pixelSize: 22
             }
     
@@ -348,6 +348,7 @@ Item {
                 font.pixelSize: 22
             }
        }
+       //////////////////////////////End buttons////////////////////////////////////
    
     ////////////////////////////////////////////////////////////////////////////////
     // this row will be responisble for visualsing the image uploaded, and predicted
@@ -357,6 +358,7 @@ Item {
         x: 150
         y: 300
         spacing: 10
+        //First Item: Region: display the image
     Item {
         width: 300
         height: 300
@@ -393,8 +395,6 @@ Item {
                 //todo replace
                 idMyImage_drop.source =  path.slice(0,-2)
                 console.log("idImageDropped.source :   "+ idMyImage_drop.source)
-                QmlConnector.load_image(path)
-                idMyImage_drop.source = Qt.resolvedUrl(path)
                 idMyRectangle_drop.width = 0
                 idMyRectangle_drop.height = 0
                 idMyRectangle_drop.x = 0
@@ -428,7 +428,7 @@ Item {
      
 
     
-    //section resultats
+    //section resultats: second item from a row 
     Item {
         width: 600
         height: 300
@@ -439,15 +439,14 @@ Item {
         } 
         Text {
             x: 200
-            text: "Inspection Results:"
+            text: "Inspection Results"
             font.pixelSize: 22
         }
-        Row {
-            width: 600
+        
             Row {
-                x: 100
+                x: 20
+                width: 600
                 y: 50
-                width: parent.width
                 Text {
                     text: "Name : "
                     font.pixelSize: 16
@@ -458,29 +457,29 @@ Item {
 
                 }
             }
-        }
         
-        Row{
-            width : 600
+        
+        
+
             Row {
-                x: 100
+                x: 20
                 y: 100
                 width: parent.width
                 Text {
-                    text: "Inspection : "
+                    text: "Decision : "
                     font.pixelSize: 16
                     }
                 Text {
                     id: idInspection
                     text: ""
+                    color: (idInspection.text == "Defected") ? "red": "green"
 
                 }
             }
-        }
-        Row{
-            width : 600
+        
+        
             Row {
-                x: 100
+                x: 20
                 y: 150
                 width: parent.width
                 Text {
@@ -493,11 +492,10 @@ Item {
 
                 }
             }
-        }
-        Row{
-            width : 600
+        
+        
             Row {
-                x: 100
+                x: 20
                 y: 200
                 width: parent.width
                 Text {
@@ -510,12 +508,11 @@ Item {
 
                 }
             }
-        }
         
-        Row{
-            width : 600
+        
+        
             Row {
-                x: 100
+                x: 20
                 y: 250
                 width: parent.width
                 Text {
@@ -528,7 +525,7 @@ Item {
 
                 }
             }
-        }
+        
 
         
     }
