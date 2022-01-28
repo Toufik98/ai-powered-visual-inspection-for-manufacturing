@@ -417,6 +417,7 @@ Item {
             height: 224
             source: ""
             anchors.centerIn: parent
+            opacity: 0
             Rectangle {
                 id: idMyRectangle_drop
                 width: 0
@@ -427,10 +428,23 @@ Item {
                 border.width: 3
 
             }
+            //we should reset the opacity to 0à un moment donné , A voir 
+            onSourceChanged: {
+                idAnimateImage.running = true
+            }
         }
     }
 
-     
+        NumberAnimation {
+            id: idAnimateImage
+            running: false
+            target: idMyImage_drop
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 2000
+            easing.type: Easing.OutQuad
+        }
 
     
     //section resultats: second item from a row 
@@ -550,16 +564,7 @@ Item {
 
 
      
-   NumberAnimation {
-            id: idAnimateImage
-            running: false
-            target: idMyRectangle_drop
-            property: "opacity"
-            from: 0
-            to: 1
-            duration: 2000
-            easing.type: Easing.OutQuad
-        }
+
 
    /*onBLoadChanged: {
         console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
