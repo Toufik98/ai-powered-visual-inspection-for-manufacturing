@@ -126,7 +126,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////////////////
    Item {
        id: idFirstItem
-       x: 200
+       x: 150
        y: 80
         width: 1200
         height: 300
@@ -304,8 +304,7 @@ Item {
 
             //Download
                Rectangle{
-                    x: 450
-                    y: 100
+                    x: 700
                     width: 100
                     height: 100
                     color:  "#b8e0e7"
@@ -336,7 +335,13 @@ Item {
                         }
                     }
             }
-        
+
+            Text {
+                x: 700
+                y: 105
+                text: "Download Data"
+                font.pixelSize: 22
+            }
        }
    
     ////////////////////////////////////////////////////////////////////////////////
@@ -383,17 +388,12 @@ Item {
                 //todo replace
                 idMyImage_drop.source =  path.slice(0,-2)
                 console.log("idImageDropped.source :   "+ idMyImage_drop.source)
-
-                 //bLocalPath = path
-                //console.log("bLocalPath:   "+ bLocalPath)
-                //console.log("idImageDropped.source:  " + idMyImage_drop.source)
-                //idImageDropped.source = "file:///home/asma/ai-powered-visual-inspection-for-manufacturing/gui/MU5TYL.png"
-                // QmlConnector.load_image(path)
-                //idImageDropped.source = Qt.resolvedUrl(path)
-                //var index = path.lastIndexOf("/") + 1
-                //var filename = path.substr(index)
-                //idMyText.text = filename
-                //QmlConnector.load_image(path)
+                QmlConnector.load_image(path)
+                idMyImage_drop.source = Qt.resolvedUrl(path)
+                idMyRectangle_drop.width = 0
+                idMyRectangle_drop.height = 0
+                idMyRectangle_drop.x = 0
+                idMyRectangle_drop.y = 0
             }
             onEntered: {
                 console.log("Entred")
