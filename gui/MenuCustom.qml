@@ -395,6 +395,8 @@ Item {
                 bLoadResult = false
                 var path = drop.text
                 console.log("paaaaaaaaaaaaaath:   "+ path)
+                QmlConnector.load_image(path)
+
                 //todo replace
                 idMyImage_drop.source =  path.slice(0,-2)
                 console.log("idImageDropped.source :   "+ idMyImage_drop.source)
@@ -402,6 +404,11 @@ Item {
                 idMyRectangle_drop.height = 0
                 idMyRectangle_drop.x = 0
                 idMyRectangle_drop.y = 0
+                idDie.text = ""
+                idIML.text = ""
+                idName.text = ""
+                idInspection.text = ""
+                idConfidence.text = ""
             }
             onEntered: {
                 console.log("Entred")
@@ -417,6 +424,7 @@ Item {
             height: 224
             source: ""
             anchors.centerIn: parent
+            opacity: 0
             Rectangle {
                 id: idMyRectangle_drop
                 width: 0
@@ -427,17 +435,30 @@ Item {
                 border.width: 3
 
             }
+            //we should reset the opacity to 0à un moment donné , A voir 
+            onSourceChanged: {
+                idAnimateImage.running = true
+            }
         }
     }
 
-     
+        NumberAnimation {
+            id: idAnimateImage
+            running: false
+            target: idMyImage_drop
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 2000
+            easing.type: Easing.OutQuad
+        }
 
     
     //section resultats: second item from a row 
     Item {
         width: 600
         height: 300
-        visible: bLoadResult
+        //
         Rectangle {
             anchors.fill: parent
             color: "#B6D5DA"
@@ -460,7 +481,8 @@ Item {
                 Text {
                     id: idName
                     text: ""
-
+                    visible: bLoadResult
+            
                 }
             }
         
@@ -479,6 +501,7 @@ Item {
                     id: idInspection
                     text: ""
                     color: (idInspection.text == "Defected") ? "red": "green"
+                    visible: bLoadResult
 
                 }
             }
@@ -495,7 +518,7 @@ Item {
                 Text {
                     id: idIML
                     text: ""
-
+                    visible: bLoadResult
                 }
             }
         
@@ -511,6 +534,7 @@ Item {
                 Text {
                     id: idDie
                     text: ""
+                    visible: bLoadResult
 
                 }
             }
@@ -528,6 +552,7 @@ Item {
                 Text {
                     id: idConfidence
                     text: ""
+                    visible: bLoadResult
 
                 }
             }
@@ -550,16 +575,7 @@ Item {
 
 
      
-   NumberAnimation {
-            id: idAnimateImage
-            running: false
-            target: idMyRectangle_drop
-            property: "opacity"
-            from: 0
-            to: 1
-            duration: 2000
-            easing.type: Easing.OutQuad
-        }
+
 
    /*onBLoadChanged: {
         console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
