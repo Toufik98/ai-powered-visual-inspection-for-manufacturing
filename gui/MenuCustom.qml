@@ -395,6 +395,8 @@ Item {
                 bLoadResult = false
                 var path = drop.text
                 console.log("paaaaaaaaaaaaaath:   "+ path)
+                QmlConnector.load_image(path)
+
                 //todo replace
                 idMyImage_drop.source =  path.slice(0,-2)
                 console.log("idImageDropped.source :   "+ idMyImage_drop.source)
@@ -402,6 +404,11 @@ Item {
                 idMyRectangle_drop.height = 0
                 idMyRectangle_drop.x = 0
                 idMyRectangle_drop.y = 0
+                idDie.text = ""
+                idIML.text = ""
+                idName.text = ""
+                idInspection.text = ""
+                idConfidence.text = ""
             }
             onEntered: {
                 console.log("Entred")
@@ -451,7 +458,7 @@ Item {
     Item {
         width: 600
         height: 300
-        visible: bLoadResult
+        //
         Rectangle {
             anchors.fill: parent
             color: "#B6D5DA"
@@ -474,7 +481,8 @@ Item {
                 Text {
                     id: idName
                     text: ""
-
+                    visible: bLoadResult
+            
                 }
             }
         
@@ -493,6 +501,7 @@ Item {
                     id: idInspection
                     text: ""
                     color: (idInspection.text == "Defected") ? "red": "green"
+                    visible: bLoadResult
 
                 }
             }
@@ -509,7 +518,7 @@ Item {
                 Text {
                     id: idIML
                     text: ""
-
+                    visible: bLoadResult
                 }
             }
         
@@ -525,6 +534,7 @@ Item {
                 Text {
                     id: idDie
                     text: ""
+                    visible: bLoadResult
 
                 }
             }
@@ -542,6 +552,7 @@ Item {
                 Text {
                     id: idConfidence
                     text: ""
+                    visible: bLoadResult
 
                 }
             }
