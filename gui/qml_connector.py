@@ -154,12 +154,7 @@ class QmlConnector(QObject):
                 print("Response : ",response.x)
                 print("Response : ",response.y)
                 if response.label != "":
-                    # Send the response
-                    #self.label.emit(response.label)
-                    #self.x.emit(response.x)
-                    #self.y.emit(response.y)
-                    #self.width.emit(response.width)
-                    #self.height.emit(response.height)
+                   
 
                     self.height_image = response.height_image
                     self.width_image = response.width_image
@@ -167,8 +162,10 @@ class QmlConnector(QObject):
                     self.confidence = response.confidence
                     insert_card(self.nm,self.die,response.label,self.confidence,str(response.x)+','+str(response.y)+','+str(response.width)+','+str(response.height)) 
                     
-
-                    return [self.nm, response.label, response.confidence, response.x, response.y, response.width, response.height]
+                    # Adapt confidence 
+                    self.confidence = self.confidence * 100
+                    self.confidence = round(self.confidence,2)
+                    return [self.nm, response.label, self.confidence, response.x, response.y, response.width, response.height]
                     print("Received response from server:")
 
         except Exception as e:
