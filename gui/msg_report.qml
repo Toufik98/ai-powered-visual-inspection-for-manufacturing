@@ -8,7 +8,7 @@ import QtQuick.Controls.Styles 1.4
 Popup {
     x: 500
     y: 300
-    width: 260
+    width: 230
     height: 40
     modal: true
     focus: true
@@ -16,7 +16,7 @@ Popup {
     visible: false
 
     Text {
-        text:  "Find report in Downloads Directory"
+        text:  "Report generation complete"
     }
 }
 
