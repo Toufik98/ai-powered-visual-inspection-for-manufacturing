@@ -25,7 +25,7 @@ Window {
             onTriggered: {
 
                 QmlConnector.report_csv_die(dieField.text)
-                QmlConnector.report_pdf()
+                QmlConnector.report_download()
                 Window.window.close()
                 var popupComponent  = Qt.createComponent("msg_report.qml")
                 var popup2 = popupComponent.createObject(idRoot, {"parent" : idRoot});
@@ -42,7 +42,7 @@ Window {
             }
             onTriggered: {
                 QmlConnector.report_csv_date(dateField.text)
-                QmlConnector.report_pdf()
+                QmlConnector.report_download()
                 Window.window.close()
                 var popupComponent  = Qt.createComponent("msg_report.qml")
                 var popup2 = popupComponent.createObject(idRoot, {"parent" : idRoot});
@@ -58,7 +58,7 @@ Window {
             }
             onTriggered: {
                 QmlConnector.report_csv_type(typeField.text)
-                QmlConnector.report_pdf()
+                QmlConnector.report_download()
                 Window.window.close()
                 var popupComponent  = Qt.createComponent("msg_report.qml")
                 var popup2 = popupComponent.createObject(idRoot, {"parent" : idRoot});
@@ -87,7 +87,7 @@ Window {
                 //appel a la fonction generate fichier csv
                 onClicked:{
                     QmlConnector.report_csv()
-                    QmlConnector.report_pdf()
+                    QmlConnector.report_download()
                     Window.window.close()
                     var popupComponent  = Qt.createComponent("msg_report.qml")
                     var popup2 = popupComponent.createObject(idRoot, {"parent" : idRoot});
