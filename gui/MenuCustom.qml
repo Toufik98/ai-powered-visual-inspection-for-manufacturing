@@ -280,7 +280,7 @@ Item {
                 width: 50
                 height: 50
                 anchors.centerIn: parent
-                source: "ICONS/generate_report.png"
+                source: "ICONS/Download.png"
                 
             }
              MouseArea {
@@ -303,52 +303,13 @@ Item {
         }
        
             Text {
-                x: 500
+                x: 520
                 y: 105
-                text: "Generate Report"
+                text: "Download Report"
                 font.pixelSize: 22
             }
 
-            //Download
-               Rectangle{
-                    x: 700
-                    width: 100
-                    height: 100
-                    color:  "#b8e0e7"
-                    radius: 100
-                Image {
-                    id: idDownload
-                    width: 50
-                    height: 50
-                    anchors.centerIn: parent
-                    source: "ICONS/Download.png"
 
-                }
-                MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                         property bool hovered: false
-                        onEntered:  {
-                            console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
-                            hovered = true
-                            parent.opacity = 0.5
-                        }
-                        onExited: parent.opacity = 1
-                        onClicked: {
-                            QmlConnector.download_csv()
-                            var popupComponent  = Qt.createComponent("msg_download.qml")
-                            var popup2 = popupComponent.createObject(idRoot, {"parent" : idRoot});
-                            popup2.open()
-                        }
-                    }
-            }
-
-            Text {
-                x: 700
-                y: 105
-                text: "Download Data"
-                font.pixelSize: 22
-            }
        }
        //////////////////////////////End buttons////////////////////////////////////
    

@@ -178,18 +178,15 @@ class QmlConnector(QObject):
     def report_csv(self):
         save_report(case=0, DIE=1, decision = "Defected",date ="2022")
         
-    @Slot()  # a completer
-    def download_csv(self):
+    
         
+    @Slot()
+    def report_download(self):        
+        pdf = PDF()
+        pdf.generate_report()  
         downloads_dir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
         f = "report"+"_"+datetime.today().strftime('%Y-%m-%d')+".csv"
         shutil.copy(f, downloads_dir)
-            
-        
-    @Slot()
-    def report_pdf(self):        
-        pdf = PDF()
-        pdf.generate_report()  
         
     @Slot(str)  
     def report_csv_die(self, text):        
