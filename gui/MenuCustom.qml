@@ -162,8 +162,10 @@ Item {
                     }
                     onExited: parent.opacity = 1
                     onClicked: { 
-                        bLoadResult = false
+                         bLoadResult = false
                         idfileDialog.open()
+                  
+                       
                     }
                 }
         }
@@ -562,7 +564,7 @@ Item {
     // this row will hold the buttons, to upload directly from dektop, and to generate reports
     ////////////////////////////////////////////////////////////////////////////////////////
     property int iValue:0
-   ProgressBar {
+ /*  ProgressBar {
     id: progressBar
     width: 500
     height: 50
@@ -576,7 +578,46 @@ Item {
             duration: 3000
         }
     }
+}*/
+
+Rectangle {
+    id: idPb
+    x: 300
+    y: 620
+    width: 600
+    height: 50
+    radius: height / 2
+    color: "white"
+    property int percentage: 0
+
+
+    Item {
+        id: cliprect
+        anchors.bottom: parent.bottom
+        anchors.top: parent.top
+        anchors.left: parent.left
+        width: parent.width * parent.percentage / 100
+        clip: true
+
+        Rectangle {
+            width: idPb.width                        
+            height: idPb.height 
+            radius: height / 2
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            color: "#b8e0e7"
+        }
+    }
 }
+      PropertyAnimation {
+            id: idAnimateProgressBar;
+            target: idPb;
+            property: percentage;
+            from: 0;
+            to: 100;
+            duration: 3000
+            }
+
 
         
    
