@@ -106,10 +106,15 @@ class QmlConnector(QObject):
         :return:
         """
         # Clean up the path 
+        print("Path recu:      ",path)
         path = path.replace('file://', '')
         print("Izannnnnn: ",path)
         # Read image from path
+        path = path.replace("\r","")
+        path = path.replace("\n","")
+
         image = cv2.imread(path)
+       
         if image is None:
             print("Image not found")
             return

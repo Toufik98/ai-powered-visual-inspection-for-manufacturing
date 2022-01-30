@@ -203,7 +203,7 @@ Item {
                     }
                     onExited: parent.opacity = 1
                     onClicked: { 
-                        idAnimateProgressBar.start() 
+                        idAnimateProgressBar.running = true 
                         var data = QmlConnector.send_image()
                         console.log("data: " + data)
                         idMyRectangle_drop.width = data[5]
@@ -365,6 +365,7 @@ Item {
                 //todo replace
                 idMyImage_drop.source =  path.slice(0,-2)
                 console.log("idImageDropped.source :   "+ idMyImage_drop.source)
+                
                 idMyRectangle_drop.width = 0
                 idMyRectangle_drop.height = 0
                 idMyRectangle_drop.x = 0
