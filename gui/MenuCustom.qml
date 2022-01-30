@@ -203,7 +203,7 @@ Item {
                     }
                     onExited: parent.opacity = 1
                     onClicked: { 
-                        idAnimateProgressBar.running = true
+                        idAnimateProgressBar.start() 
                         var data = QmlConnector.send_image()
                         console.log("data: " + data)
                         idMyRectangle_drop.width = data[5]
@@ -560,25 +560,7 @@ Item {
 
     
 
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // this row will hold the buttons, to upload directly from dektop, and to generate reports
-    ////////////////////////////////////////////////////////////////////////////////////////
-    property int iValue:0
- /*  ProgressBar {
-    id: progressBar
-    width: 500
-    height: 50
-    x: 300
-    y: 620
-    from: 0
-    to: 100
-    Behavior on value {
-        NumberAnimation {
-            id: idAnimateProgressBar
-            duration: 3000
-        }
-    }
-}*/
+
 
 Rectangle {
     id: idPb
@@ -610,12 +592,17 @@ Rectangle {
     }
 }
       PropertyAnimation {
-            id: idAnimateProgressBar;
-            target: idPb;
-            property: percentage;
-            from: 0;
-            to: 100;
+            id: idAnimateProgressBar
+            target: idPb
+            property: "percentage"
+            from: 0
+            to: 100
             duration: 3000
+            running: false
+            alwaysRunToEnd: true
+
+
+
             }
 
 
