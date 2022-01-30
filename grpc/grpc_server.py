@@ -19,7 +19,7 @@ import numpy as np
 
 # Change the path to the directory where the script predicts.py is located
 cwd = os.getcwd()
-sys.path.append(cwd + '/../source/')
+sys.path.append(cwd + '/./source/')
 from predict import Predict
 
 
@@ -34,7 +34,7 @@ class RgbImageServicer(rgb_image_pb2_grpc.Predict_serviceServicer):
         """
         self.server = None
         # Instance of the model
-        self.classifier = Predict(cwd + '/../models/mobilenet.hdf5')
+        self.classifier = Predict(cwd + '/./models/mobilenet.hdf5')
         if self.classifier.model is None:
             print("Error loading model")
         else:

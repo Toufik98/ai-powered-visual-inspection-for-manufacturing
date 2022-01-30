@@ -21,21 +21,19 @@ import zlib
 import base64
 from datetime import datetime
 from gi.repository import GLib
+import argparse
 
 # Change directory to the directory of this file
 cwd = os.getcwd()
 
-sys.path.append(cwd + '/../database/')
+sys.path.append(cwd + '/./database/')
 from db import create_connection, insert_card, generate_report, save_report
 from pdf import PDF
 
-sys.path.append(cwd + '/../grpc/')
+sys.path.append(cwd + '/./grpc/')
 import rgb_image_pb2
 import rgb_image_pb2_grpc
 
-cwd = os.getcwd()
-sys.path.append(cwd + '/../database/')
-from Sqlite_db import Sqlite_db
 
 import PySide2 as Qt
 from PySide2.QtCore import QObject, Signal, Slot, QTimer, QThread, QMutex, QMutexLocker
@@ -94,8 +92,8 @@ class QmlConnector(QObject):
         self.confidence = 0
 
         #Create database
-        self.db = Sqlite_db(cwd + '/../database/database.db')
-        self.db.create_cards_table()
+        #self.db = Sqlite_db(cwd + '/../database/database.db')
+        #self.db.create_cards_table()
 
         #Progess Value
         self.progress = 0  
@@ -211,6 +209,12 @@ def main():
     """
     Main function
     """
+    # Parse arguments
+    parser = argparse.ArgumentParser(description='Client for the RGB_image_server')
+    parser.add_argument('--ip_address', default='localhost', help='IP address of the server')
+    parser.add_argument('--port', default='50051', help='Port of the server')
+    args = parser.parse_args()
+
     # Create a QApplication
     app = QGuiApplication(sys.argv)
 
@@ -218,7 +222,7 @@ def main():
     engine = QQmlApplicationEngine()
 
     # Create a QmlConnector
-    qml_connector = QmlConnector(ip_address="localhost", port="50051")
+    qml_connector = QmlConnector(ip_address= args.ip_address, port=args.port)
 
     # Connect to QML
     engine.rootContext().setContextProperty("QmlConnector", qml_connector)
