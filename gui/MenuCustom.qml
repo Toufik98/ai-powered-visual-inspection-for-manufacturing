@@ -518,8 +518,13 @@ Item {
                     id: idConfidence
                     text: ""
                     visible: bLoadResult
-
                 }
+                Text {
+                    id: idPerce
+                    text: "%"
+                    visible: bLoadResult
+                }
+
             }
         
 
