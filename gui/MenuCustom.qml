@@ -210,7 +210,7 @@ Item {
                         idMyRectangle_drop.height = data[6]
                         idMyRectangle_drop.x = data[3]
                         idMyRectangle_drop.y = data[4]
-                        idName.text = data[0]
+                        idName.text = data[0].split(".")[0]
                         idInspection.text = data[1]
                         idConfidence.text = data[2]
                         idIML.text = data[0].split("_")[3]
