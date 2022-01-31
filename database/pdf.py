@@ -5,15 +5,18 @@ import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
 from pathlib import Path
-
+import os 
+import matplotlib
+matplotlib.use('TkAgg')
 
 from gi.repository import GLib
 downloads_dir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD)
 
 class PDF(FPDF):
     def header(self):
+        cwd = os.getcwd()
         # Logo
-        self.image('valeo_logo.png', 10, 8, 33)
+        self.image(cwd+"/database/"+'valeo_logo.png', 10, 8, 33)
         # Arial bold 15
         self.set_font('Arial', 'B', 15)
         # Move to the right
@@ -65,6 +68,9 @@ class PDF(FPDF):
 
 
     def fill_report(self,data,path="report",font='Arial',font_size=10):
+        
+        cwd = os.getcwd()
+        
         self.add_page()
         # create a cell
         
@@ -128,11 +134,11 @@ class PDF(FPDF):
         n_def = len(df[df["Decision"]=="Defected"])
         n_notdef = len(df[df["Decision"]=="NOT Defected"])      
         if n_def>= n_notdef:
-            result = "negatif.txt"
+            result = cwd+"/database/negatif.txt"
         elif  2*n_def> n_notdef:
-            result = "medium.txt"
+            result = cwd+"/database/"+"medium.txt"
         else: 
-            result = "positif.txt"
+            result = cwd+"/database/"+"positif.txt"
         # save pdf
 
         self.print_chapter( 'Conclusion', result)
