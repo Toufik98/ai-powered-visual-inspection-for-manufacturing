@@ -10,6 +10,8 @@ Window {
 
     property bool bLoadReports: false
     Background {
+        width: 1200
+        height: 700
 
     }
 

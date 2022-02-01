@@ -131,7 +131,7 @@ Item {
     ////////////////////////////////////////////////////////////////////////////////////////
    Item {
        id: idFirstItem
-       x: 150
+       x: 180
        y: 80
         width: 1200
         height: 300
@@ -193,6 +193,7 @@ Item {
                 
             }
             MouseArea {
+                id: idMouseAreaSend
                     anchors.fill: parent
                     hoverEnabled: true
                      property bool hovered: false
@@ -202,8 +203,9 @@ Item {
                         parent.opacity = 0.5
                     }
                     onExited: parent.opacity = 1
-                    onClicked: { 
-                        idAnimateProgressBar.running = true 
+                   
+                    onClicked: {
+                        idAnimateProgressBar.start() 
                         var data = QmlConnector.send_image()
                         console.log("data: " + data)
                         idMyRectangle_drop.width = data[5]
@@ -215,9 +217,6 @@ Item {
                         idConfidence.text = data[2]
                         idIML.text = data[0].split("_")[3]
                         idDie.text = data[0].split("_")[4]
-
-
-                        
                     }
                 }
         }
@@ -263,7 +262,7 @@ Item {
         }
            
             Text {
-                x: 400
+                x: 408
                 y: 105
                 text: "Inspect"
                 font.pixelSize: 22
@@ -306,7 +305,7 @@ Item {
         }
        
             Text {
-                x: 500
+                x: 507
                 y: 105
                 text: "Download Report"
                 font.pixelSize: 22
@@ -365,7 +364,7 @@ Item {
                 //todo replace
                 idMyImage_drop.source =  path.slice(0,-2)
                 console.log("idImageDropped.source :   "+ idMyImage_drop.source)
-                
+
                 idMyRectangle_drop.width = 0
                 idMyRectangle_drop.height = 0
                 idMyRectangle_drop.x = 0
@@ -597,8 +596,10 @@ Rectangle {
         }
     }
 }
-      PropertyAnimation {
-            id: idAnimateProgressBar
+
+    SequentialAnimation{
+        id: idAnimateProgressBar
+        NumberAnimation {
             target: idPb
             property: "percentage"
             from: 0
@@ -606,13 +607,24 @@ Rectangle {
             duration: 3000
             running: false
             alwaysRunToEnd: true
-
-
-
+            easing.type: Easing.OutQuart
             }
+            
+        ScriptAction{
+            script: {
+                console.log("idAnimateProgressBar.onFinished")
+                idPb.percentage = 0
+            }
+        }
 
+    }
 
+/*idAnimateProgressBar.o: {
+    console.log("idAnimateProgressBar.onFinished")
+    idPb.percentage = 0
+}*/
         
+
    
 
 }
