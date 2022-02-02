@@ -9,6 +9,7 @@ This project is divided into several subdirectories :
 * `notebooks` : contains all the files which are used to preprocess the data, implement the machine learning algorithms models and train the models
 * `source` : contains the principal files of the project, predict.py that will be used to load the models and make the prediction, main.py that will the main file of the project
 * `suggested frameworks` : contains all the frameworks that are suggested to be used in the project
+* `train` : contains all the files which are used to train the models
 
 ## Installation
 ### Linux
