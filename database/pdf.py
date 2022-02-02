@@ -119,7 +119,7 @@ class PDF(FPDF):
         palette = sns.color_palette("mako_r", n)
         sns_plot3 = sns.lineplot(x="Date", y='Card_Name',
                     hue="Decision",
-                    data=dx,palette=palette).set_title("Time-Series representation- Monthly aggregation")
+                    data=dx,palette=palette).set_title("Time-Series representation- Aggregation")
         plt.xticks(rotation=30)
         plt.ylabel("Numbers of cards")
         sns_plot3.figure.savefig("output3.png")
