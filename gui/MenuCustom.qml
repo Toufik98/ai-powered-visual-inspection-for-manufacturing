@@ -46,7 +46,7 @@ Item {
         selectedNameFilter: "All files (*)"
         onAccepted: {
             var path = idfileDialog.fileUrl.toString();
-            //console.log("File dialog: "+path)
+        
             idMyImage_drop.source = Qt.resolvedUrl(path)
             var index = path.lastIndexOf("/") + 1;
             var filename = path.substr(index);
@@ -156,7 +156,7 @@ Item {
                     hoverEnabled: true
                      property bool hovered: false
                     onEntered:  {
-                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                    
                         hovered = true
                         parent.opacity = 0.5
                     }
@@ -198,7 +198,7 @@ Item {
                     hoverEnabled: true
                      property bool hovered: false
                     onEntered:  {
-                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                       
                         hovered = true
                         parent.opacity = 0.5
                     }
@@ -207,7 +207,7 @@ Item {
                     onClicked: {
                         idAnimateProgressBar.start() 
                         var data = QmlConnector.send_image()
-                        console.log("data: " + data)
+                        
                         idMyRectangle_drop.width = data[5]
                         idMyRectangle_drop.height = data[6]
                         idMyRectangle_drop.x = data[3]
@@ -249,7 +249,7 @@ Item {
                     hoverEnabled: true
                      property bool hovered: false
                     onEntered:  {
-                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        
                         hovered = true
                         parent.opacity = 0.5
                     }
@@ -290,7 +290,7 @@ Item {
                     hoverEnabled: true
                      property bool hovered: false
                     onEntered:  {
-                        console.log("hiiiiii m hoveriiiiiiiiiiiiiiiiiing on ur btn ")
+                        
                         hovered = true
                         parent.opacity = 0.5
                     }
@@ -358,12 +358,12 @@ Item {
             onDropped: {
                 bLoadResult = false
                 var path = drop.text
-                console.log("paaaaaaaaaaaaaath:   "+ path)
+                
                 QmlConnector.load_image(path)
 
                 //todo replace
                 idMyImage_drop.source =  path.slice(0,-2)
-                console.log("idImageDropped.source :   "+ idMyImage_drop.source)
+               
 
                 idMyRectangle_drop.width = 0
                 idMyRectangle_drop.height = 0
@@ -376,10 +376,10 @@ Item {
                 idConfidence.text = ""
             }
             onEntered: {
-                console.log("Entred")
+                
             }
             onExited: {
-                console.log("Exited")
+                
             }
         }
 
@@ -547,20 +547,7 @@ Item {
      
 
 
-   /*onBLoadChanged: {
-        console.log("Heyyyyyyyyyyyyyyyyy: " + bLoad )
-        if (true === bLoad){
-            idAnimateImage.from = 0
-            idAnimateImage.to = 1
-            idAnimateImage.running = true
-
-        }
-        else {
-            idAnimateImage.from = 1
-            idAnimateImage.to = 0
-            idAnimateImage.running = true
-        }
-    }*/
+ 
 
 
     
@@ -612,7 +599,7 @@ Rectangle {
             
         ScriptAction{
             script: {
-                console.log("idAnimateProgressBar.onFinished")
+                
                 idPb.percentage = 0
             }
         }
