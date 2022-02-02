@@ -362,7 +362,8 @@ Item {
                 QmlConnector.load_image(path)
 
                 //todo replace
-                idMyImage_drop.source =  path.slice(0,-2)
+                // idMyImage_drop.source =  path.slice(0,-2)
+                idMyImage_drop.source =  path
                 console.log("idImageDropped.source :   "+ idMyImage_drop.source)
 
                 idMyRectangle_drop.width = 0

@@ -107,7 +107,7 @@ class QmlConnector(QObject):
         """
         # Clean up the path 
         print("Path recu:      ",path)
-        path = path.replace('file://', '')
+        path = path.replace('file:///', '')
         print("Izannnnnn: ",path)
         # Read image from path
         path = path.replace("\r","")
