@@ -87,8 +87,6 @@ def get_bounding_box(CAM, img, label_index):
     if(label_index==0):
       # plot image
       # plot class activation map
-      # print(CAM.shape)
-
       CAM2 = image.img_to_array(CAM, dtype='uint8')
       thresh = cv2.threshold(CAM2, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
       # Find contours
@@ -97,13 +95,8 @@ def get_bounding_box(CAM, img, label_index):
       coordinates=[]
       for c in cnts:
           x,y,w,h = cv2.boundingRect(c)
-          # print(x,y,w,h)
-          # cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
           coordinates.append([x,y,w,h])
-      # plt.imshow(thresh)
-      # plt.imshow(img)
     else :
-      # plt.imshow(img)
       coordinates=[0,0,0,0]
 
     
