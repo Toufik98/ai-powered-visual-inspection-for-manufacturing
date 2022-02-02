@@ -414,7 +414,7 @@ Item {
             property: "opacity"
             from: 0
             to: 1
-            duration: 2000
+            duration: 500
             easing.type: Easing.OutQuad
         }
 
