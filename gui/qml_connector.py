@@ -105,8 +105,13 @@ class QmlConnector(QObject):
         :param data:
         :return:
         """
-        # Clean up the path 
-        path = path.replace('file:///', '')
+        # Clean up the path
+        # If linux or mac
+        if os.name == 'posix':
+            path = path.replace('file://', '')
+        # If windows
+        elif os.name == 'nt':
+            path = path.replace('file:///', '')
     
         # Read image from path
 
