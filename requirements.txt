@@ -61,3 +61,6 @@ wrapt==1.13.3
 zipp==3.7.0
 PySide2
 scipy 
+fpdf
+seaborn
+

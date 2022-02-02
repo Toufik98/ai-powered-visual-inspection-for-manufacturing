@@ -10,11 +10,42 @@ This project is divided into several subdirectories :
 * `source` : contains the principal files of the project, predict.py that will be used to load the models and make the prediction, main.py that will the main file of the project
 
 ## Installation
-To be able to use the project, you need to do the following :
+### Linux
+To be able to use the project on a Linux machine, you need to do the following :
 * Install the Python 3.8.x or higher version
 * Install the needed packages with `pip install -r requirements.txt`
 * Install qt5-default with `sudo apt-get install qt5-default`
+* Install Tkinter with `sudo apt-get install python3-tk`
+### Windows
+For Windows, you need :
+* Python 3.8.x or higher version
+* The needed packages with `pip install -r requirements.txt`
 ## Usage
+### Main file
 Execute the main file of the project with `python3 main.py`
+
+### Separate files
+Since the project architecture is divided into server and client, you can execute the server with `python3 grpc/server.py` and the client with `python3 gui/qml_connector.py`
+
+## gRPC
+The gRPC server is used to make the application available to the outside world. It is used to make the prediction of the images and to send the results to the client. 
+
+The received messages and the sent messages are defined in the `grpc/rgb_image.proto` file. They can be modified to fit the needs of the project.
+
+after any modification, you need to regenerate grpc files with `python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. rgb_image.proto`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
